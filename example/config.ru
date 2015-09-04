@@ -3,6 +3,7 @@ Bundler.require
 
 run Opal::Server.new { |s|
   s.append_path 'app'
+  s.append_path '../lib'
 
   s.debug = true
   s.main = 'application'
