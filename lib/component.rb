@@ -6,7 +6,11 @@ module Hyalite
       @props = props
       @context = context
       @updator = updator
-      @state = {}
+      @state = get_initial_state
+    end
+
+    def get_initial_state
+      {}
     end
 
     def context_types

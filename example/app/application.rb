@@ -4,6 +4,11 @@ require 'browser/interval'
 class ExampleView
   include Hyalite::Component
 
+  def get_initial_state
+    @count = 0
+    { now: @count }
+  end
+
   def component_did_mount
     @count = 0
     every(1) do
