@@ -39,8 +39,8 @@ module Hyalite
 
         root_element = root_element_in_container(container)
         container_has_markup = root_element && is_rendered(root_element)
-
         should_reuse_markup = container_has_markup && prev_component.nil?
+
         component = render_new_root_component(
           next_wrapped_element,
           container,
@@ -75,11 +75,11 @@ module Hyalite
         component_instance
       end
 
-      def register_component(nextComponent, container)
+      def register_component(next_component, container)
         #ReactBrowserEventEmitter.ensureScrollValueMonitoring();
 
         root_id = register_container(container)
-        @instances_by_root_id[root_id] = nextComponent;
+        @instances_by_root_id[root_id] = next_component;
         root_id
       end
 

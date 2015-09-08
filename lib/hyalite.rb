@@ -49,9 +49,9 @@ module Hyalite
       end
     end
 
-    def render(nextElement, container)
+    def render(next_element, container)
       proc = block_given? ? Proc.new {|c| yield(c) } : nil
-      Mount.render_subtree_into_container(nil, nextElement, container, &proc);
+      Mount.render_subtree_into_container(nil, next_element, container, &proc);
     end
 
     def instance_map
