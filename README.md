@@ -19,7 +19,6 @@ class ExampleView
   end
 
   def component_did_mount
-    @count = 0
     every(1) do
       set_state({ now: @count += 1 })
     end
