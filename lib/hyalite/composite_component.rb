@@ -1,6 +1,6 @@
-require_relative 'update_queue'
-require_relative 'reconciler'
-require_relative 'internal_component'
+require 'hyalite/update_queue'
+require 'hyalite/reconciler'
+require 'hyalite/internal_component'
 
 module Hyalite
   class CompositeComponent

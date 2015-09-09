@@ -1,5 +1,5 @@
-require_relative 'multi_children'
-require_relative 'internal_component'
+require 'hyalite/multi_children'
+require 'hyalite/internal_component'
 
 module Hyalite
   class DOMComponent

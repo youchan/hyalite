@@ -1,4 +1,4 @@
-require_relative 'internal_component'
+require 'hyalite/internal_component'
 
 module Hyalite
   include InternalComponent

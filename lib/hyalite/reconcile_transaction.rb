@@ -1,4 +1,4 @@
-require_relative 'transaction'
+require 'hyalite/transaction'
 
 module Hyalite
   class ReconcileTransaction < Transaction

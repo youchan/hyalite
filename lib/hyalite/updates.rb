@@ -1,7 +1,7 @@
-require_relative 'transaction'
-require_relative 'callback_queue'
-require_relative 'reconciler'
-require_relative 'reconcile_transaction'
+require 'hyalite/transaction'
+require 'hyalite/callback_queue'
+require 'hyalite/reconciler'
+require 'hyalite/reconcile_transaction'
 
 module Hyalite
   class Updates

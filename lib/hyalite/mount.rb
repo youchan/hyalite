@@ -1,12 +1,12 @@
-require_relative 'transaction'
-require_relative 'adler32'
-require_relative 'try'
-require_relative 'transaction'
-require_relative 'element'
-require_relative 'component'
-require_relative 'instance_handles'
-require_relative 'updates'
-require_relative 'composite_component'
+require 'hyalite/transaction'
+require 'hyalite/adler32'
+require 'hyalite/try'
+require 'hyalite/transaction'
+require 'hyalite/element'
+require 'hyalite/component'
+require 'hyalite/instance_handles'
+require 'hyalite/updates'
+require 'hyalite/composite_component'
 
 module Hyalite
   module Mount
