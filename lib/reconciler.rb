@@ -87,7 +87,7 @@ module Hyalite
         case children
         when Array
           children.each_with_index do |child, i|
-            next_name = (name_so_far.blank? ? SUBSEPARATOR : name_so_far + SEPARATOR) + component_key(child, i)
+            next_name = (name_so_far.empty? ? SUBSEPARATOR : name_so_far + SEPARATOR) + component_key(child, i)
             traverse_children(child, next_name) {|n, c| yield [n, c] }
           end
         else
