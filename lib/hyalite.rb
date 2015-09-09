@@ -9,16 +9,24 @@ require_relative 'text_component'
 
 module Hyalite
   class << self
+    RESERVED_PROPS = [:key, :ref, :children]
+
     def create_element(type, config = nil, *children)
       key = nil
       ref = nil
 
-      if config
-        key = config.key
-        ref = config.ref
-      end
-
       props = {}
+
+      if config
+        key = config[:key]
+        ref = config[:ref]
+
+        config.each do |name, value|
+          unless RESERVED_PROPS.include?(name)
+            props[name] = config[name];
+          end
+        end
+      end
 
       props[:children] = children.length == 1 ? children.first : children
 

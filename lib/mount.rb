@@ -144,7 +144,8 @@ module Hyalite
           if node_cache.has_key?(id)
             cached = node_cache[id]
             if cached != node
-              raise "Mount: Two valid but unequal nodes with the same `#{ID_ATTR_NAME}`: #{id}"
+              #raise "Mount: Two valid but unequal nodes with the same `#{ID_ATTR_NAME}`: #{id}"
+              node_cache[id] = node
             end
           else
             node_cache[id] = node

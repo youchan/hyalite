@@ -69,6 +69,10 @@ module Hyalite
       @instance
     end
 
+    def inspect
+      "CompositeComponent: instance: #{@instance.inspect}"
+    end
+
     private
 
     def render_component(instance)
@@ -82,7 +86,6 @@ module Hyalite
     end
 
     def update_component(mount_ready, prev_parent_element, next_parent_element, prev_unmasked_context, next_unmasked_context)
-
       next_context = (@context == next_unmasked_context ? @instance.context : mask_context(next_unmasked_context))
 
       next_props = next_parent_element.props
@@ -147,6 +150,7 @@ module Hyalite
     end
 
     def update_rendered_component(mount_ready, context)
+      puts "update_rendered_component"
       prev_component_instance = @rendered_component
       prev_rendered_element = prev_component_instance.current_element
       next_rendered_element = render_validated_component
@@ -176,7 +180,7 @@ module Hyalite
 
     def replace_node_with_markup_by_id(id, markup)
       node = Mount.node_by_id(id)
-      node.child.replace(markup)
+      node.replace(markup)
     end
 
     def render_validated_component

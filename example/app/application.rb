@@ -17,10 +17,12 @@ class ExampleView
   end
 
   def render
-    Hyalite.create_element("div", nil, Hyalite.create_element("h2", nil, "count = #{@state[:now]}"))
+    Hyalite.create_element("div", nil,
+      Hyalite.create_element("h2", nil, @props[:title]),
+      Hyalite.create_element("h3", nil, "count = #{@state[:now]}"))
   end
 end
 
 $document.ready do
-  Hyalite.render(Hyalite.create_element(ExampleView, nil), $document['.container'])
+  Hyalite.render(Hyalite.create_element(ExampleView, {title: "Hyalite counter example"}), $document['.container'])
 end
