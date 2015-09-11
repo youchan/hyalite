@@ -1,4 +1,4 @@
-require_relative 'hyalite.rb'
+require 'hyalite'
 require 'browser/interval'
 
 class ExampleView
