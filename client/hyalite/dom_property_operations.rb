@@ -16,19 +16,18 @@ module Hyalite
           return
         end
 
-        element[attribute_name]=Hyalite.quote_attribute_value_for_browser(value)
+        element[attribute_name]=Hyalite.escape_text_content_for_browser(value)
       elsif DOMProperty.is_custom_attribute(name)
         return if value.nil?
 
-        element[name]=Hyalite.quote_attribute_value_for_browser(value)
+        element[name]=Hyalite.escape_text_content_for_browser(value)
       end
     end
 
     def self.create_markup_for_custom_attribute(element, name, value)
       return if (!is_attribute_name_safe(name) || value == null)
 
-      element[name]=Hyalite.quote_attribute_value_for_browser(value)
-    end
+      element[name]=Hyalite.escape_text_content_for_browser(value) end
 
     def self.is_attribute_name_safe(attribute_name)
       @illegal_attribute_name_cache ||= {}
