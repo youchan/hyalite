@@ -1,4 +1,5 @@
 require 'hyalite/multi_children'
+require 'hyalite/dom_property_operations'
 require 'hyalite/internal_component'
 
 module Hyalite
@@ -11,6 +12,7 @@ module Hyalite
     def initialize(element)
       @element = element
       @tag = @element.type.downcase
+      @registration_name_modules = {}
     end
 
     def mount_component(root_id, mount_ready, context)
@@ -105,36 +107,35 @@ module Hyalite
       end
     end
 
-    def create_open_tag_markup_and_put_listeners(tmount_ready, props)
+    def create_open_tag_markup_and_put_listeners(mount_ready, props)
       element = $document.create_element(@tag)
 
-      # @props.each do |prop_key, prop_value|
-      #   next unless prop_value
+      @element.props.each do |prop_key, prop_value|
+        next unless prop_value
 
-      #   if @registration_name_modules.has_key?(prop_key)
-      #     enqueuePutListener(this._rootNodeID, propKey, propValue, transaction)
-      #   else
-      #     if prop_key == STYLE
-      #       if prop_value
-      #         prop_value = @previous_style_copy = props.style.clone
-      #       end
-      #       prop_value = CSSPropertyOperations.create_markup_for_styles(prop_value)
-      #     end
-      #
-      #     if is_custom_component(@tag, props)
-      #       #markup = DOMPropertyOperations.createMarkupForCustomAttribute(propKey, propValue);
-      #     else
-      #       #markup = DOMPropertyOperations.createMarkupForProperty(propKey, propValue);
-      #     end
-      #   end
-      # end
+        if @registration_name_modules.has_key?(prop_key)
+          #enqueuePutListener(this._rootNodeID, propKey, propValue, transaction)
+        else
+          if prop_key == :style
+            if prop_value
+              prop_value = @previous_style_copy = props.style.clone
+            end
+            prop_value = DOMPropertyOperations.create_markup_for_styles(prop_value)
+          end
+      
+          if is_custom_component(@tag, props)
+            DOMPropertyOperations.create_markup_for_custom_attribute(element, prop_key, prop_value)
+          else
+            DOMPropertyOperations.create_markup_for_property(element, prop_key, prop_value)
+          end
+        end
+      end
 
-      # return element if transaction.render_to_static_markup
+      #return element if mount_ready.render_to_static_markup
 
       element[Mount::ID_ATTR_NAME] = @root_node_id
       element
     end
-
 
     def is_custom_component(tag, props)
       tag.include?('-') || props.has_key?(:is)

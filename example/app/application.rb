@@ -10,13 +10,13 @@ class ExampleView
   end
 
   def component_did_mount
-    every(1) do
+    every(5) do
       set_state({ now: @count += 1 })
     end
   end
 
   def render
-    Hyalite.create_element("div", nil,
+    Hyalite.create_element("div", {class: 'example'},
       Hyalite.create_element("h2", nil, @props[:title]),
       Hyalite.create_element("h3", nil, "count = #{@state[:now]}"))
   end
