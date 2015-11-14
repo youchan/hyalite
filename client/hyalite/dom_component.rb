@@ -15,6 +15,10 @@ module Hyalite
       @registration_name_modules = {}
     end
 
+    def current_element
+      @element
+    end
+
     def mount_component(root_id, mount_ready, context)
       return if @tag == "noscript"
       @root_node_id = root_id
@@ -90,6 +94,8 @@ module Hyalite
       end
     end
 
+    private
+
     def update_dom_children(last_props, next_props, mount_ready, context)
       last_contet_is_text = is_text_content(last_props[:children])
       next_content_is_text = is_text_content(next_props[:chilren])
@@ -122,7 +128,7 @@ module Hyalite
             end
             prop_value = DOMPropertyOperations.create_markup_for_styles(prop_value)
           end
-      
+
           if is_custom_component(@tag, props)
             DOMPropertyOperations.create_markup_for_custom_attribute(element, prop_key, prop_value)
           else
@@ -137,11 +143,6 @@ module Hyalite
       element
     end
 
-    def is_custom_component(tag, props)
-      tag.include?('-') || props.has_key?(:is)
-    end
-
-
     def create_content_markup(mount_ready, element, context)
       children = @element.props[:children]
       if is_text_content(children)
@@ -155,6 +156,11 @@ module Hyalite
       element
     end
 
+
+    def is_custom_component(tag, props)
+      tag.include?('-') || props.has_key?(:is)
+    end
+
     def is_text_content(children)
       case children
       when String, Numeric
@@ -162,10 +168,6 @@ module Hyalite
       else
         false
       end
-    end
-
-    def current_element
-      @element
     end
   end
 end
