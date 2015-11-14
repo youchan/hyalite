@@ -14,14 +14,16 @@ module Hyalite
       end
 
       def root_id_from_node_id(id)
-        if id && id.start_with? SEPARATOR
+        if id && id.start_with?(SEPARATOR)
           index = id.index(SEPARATOR, 1)
           index ? id[0...index] : id
         end
       end
 
       def root_index
+        index = @root_index
         @root_index += 1
+        index
       end
 
       def traverse_ancestors(targetID)
