@@ -3,11 +3,12 @@ class CallbackQueue
     @queue = []
   end
 
-  def enqueue(proc = nil)
-    if proc.nil? && block_given?
-      proc = Proc.new { yield }
+  def enqueue(proc = nil, &block)
+    if proc
+      @queue << proc
+    elsif block_given?
+      @queue << block
     end
-    @queue << proc
   end
 
   def notify_all

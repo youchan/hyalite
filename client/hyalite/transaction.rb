@@ -9,10 +9,10 @@ end
 class Transaction
   include TransactionWrapper
 
-  def initialize(transaction_wrappers = nil)
+  def initialize(transaction_wrappers = nil, &block)
     @transaction_wrappers = transaction_wrappers || []
     if block_given?
-      @close_proc = Proc.new { yield }
+      @close_proc = block
       @transaction_wrappers << self
     end
   end

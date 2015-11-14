@@ -18,19 +18,18 @@ module Hyalite
     @is_batching_updates = false
 
     class << self
-      def render_subtree_into_container(parent_component, next_element, container)
+      def render_subtree_into_container(parent_component, next_element, container, &block)
         next_wrapped_element = ElementObject.new(TopLevelWrapper, nil, nil, nil, next_element)
         prev_component = @instances_by_root_id[root_id(container)]
         if prev_component
           prev_wrapped_element = prev_component.current_element
           prev_element = prev_wrapped_element.props;
           if Reconciler.should_update_component(prev_element, next_element)
-            proc = block_given? ? Proc.new {|c| yield(c) } : nil
             return update_root_component(
               prev_component,
               next_wrapped_element,
               container,
-              &proc
+              &block
             ).rendered_component.public_instance
           else
             unmount_component_at_node(container)
