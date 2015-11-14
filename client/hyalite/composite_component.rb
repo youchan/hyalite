@@ -150,7 +150,6 @@ module Hyalite
     end
 
     def update_rendered_component(mount_ready, context)
-      puts "update_rendered_component"
       prev_component_instance = @rendered_component
       prev_rendered_element = prev_component_instance.current_element
       next_rendered_element = render_validated_component
