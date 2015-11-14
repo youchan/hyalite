@@ -15,9 +15,9 @@ module Hyalite
       end
 
       def root_id_from_node_id(id)
-        if (id && id[0] == SEPARATOR && id.length > 1)
+        if id && id.start_with? SEPARATOR
           index = id.index(SEPARATOR, 1)
-          index >= 0 ? id[0..index] : id
+          index ? id[0...index] : id
         end
       end
 
