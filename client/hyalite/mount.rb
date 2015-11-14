@@ -161,7 +161,7 @@ module Hyalite
         end
       end
 
-      def node_by_id(id)
+      def node(id)
         unless node_cache.has_key?(id) && is_valid(node_cache[id], id)
           node_cache[id] = find_component_root(@containers_by_root_id[id], id)
         end

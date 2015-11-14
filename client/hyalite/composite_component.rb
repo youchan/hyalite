@@ -178,7 +178,7 @@ module Hyalite
 
 
     def replace_node_with_markup_by_id(id, markup)
-      node = Mount.node_by_id(id)
+      node = Mount.node(id)
       node.replace(markup)
     end
 
