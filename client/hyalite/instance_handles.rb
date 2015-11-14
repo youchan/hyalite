@@ -6,8 +6,7 @@ module Hyalite
 
     class << self
       def root_id_string(index)
-        SEPARATOR + index.to_s
-        #SEPARATOR + index.toString(36);
+        SEPARATOR + index.to_s(36)
       end
 
       def create_root_id
