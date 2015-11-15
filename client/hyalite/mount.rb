@@ -59,7 +59,7 @@ module Hyalite
       def is_rendered(node)
         return false if node.node_type != Browser::DOM::Node::ELEMENT_NODE
 
-        id = node_to_id(node)
+        id = node_id(node)
         id ? id[0] == SEPARATOR : false
       end
 
@@ -83,9 +83,9 @@ module Hyalite
       end
 
       def register_container(container)
-        root_id = root_id(container)
-        if root_id
-          root_id = InstanceHandles.root_id_from_node_id(root_id)
+        node_id = root_id(container)
+        if node_id
+          root_id = InstanceHandles.root_id_from_node_id(node_id)
         end
 
         unless root_id
@@ -130,14 +130,14 @@ module Hyalite
 
       def root_id(container)
         root_element = root_element_in_container(container)
-        root_element && node_to_id(root_element)
+        root_element && node_id(root_element)
       end
 
       def node_cache
         @node_cache ||= {}
       end
 
-      def node_to_id(node)
+      def node_id(node)
         id = internal_id(node)
         if id
           if node_cache.has_key?(id)
@@ -160,11 +160,19 @@ module Hyalite
         end
       end
 
+      # cf. ReactMount#findReactContainerForID
+      def container_for_id(id)
+        root_id = InstanceHandles.root_id_from_node_id(id)
+        @containers_by_root_id[root_id]
+      end
+
       def node(id)
-        unless node_cache.has_key?(id) && is_valid(node_cache[id], id)
-          node_cache[id] = find_component_root(@containers_by_root_id[id], id)
+        node =  node_cache[id]
+        unless node && is_valid(node, id)
+          root_id = InstanceHandles.root_id_from_node_id(id)
+          node = node_cache[id] = find_component_root(@containers_by_root_id[root_id], id)
         end
-        node_cache[id]
+        node
       end
 
       def is_valid(node, id)
@@ -187,7 +195,7 @@ module Hyalite
           child = first_children.shift
 
           while child
-            child_id = node_to_id(child)
+            child_id = node_id(child)
             if child_id
               if target_id == child_id
                 return child
@@ -206,23 +214,17 @@ module Hyalite
       end
 
       def find_deepest_cached_ancestor(target_id)
-        @deepest_node_so_far = nil
-        InstanceHandles.traverse_ancestors(target_id) do |id|
-          find_deepest_cached_ancestor_impl(id)
+        deepest_node_so_far = nil
+        InstanceHandles.traverse_ancestors(target_id) do |ancestor_id|
+          ancestor = node_cache[ancestor_id]
+          if ancestor && is_valid(ancestor, ancestor_id)
+            deepest_node_so_far = ancestor;
+          else
+            false
+          end
         end
 
-        found_node = @deepest_node_so_far
-        @deepest_node_so_far = nil
-        found_node
-      end
-
-      def find_deepest_cached_ancestor_impl(ancestor_id)
-        ancestor = node_cache[ancestor_id]
-        if ancestor && is_valid(ancestor, ancestor_id)
-          @deepest_node_so_far = ancestor;
-        else
-          false
-        end
+        deepest_node_so_far
       end
 
       def contains_node(outer_node, inner_node)
@@ -236,6 +238,30 @@ module Hyalite
         else
           contains_node(outer_node, inner_node.parent)
         end
+      end
+
+      def find_first_hyalite_dom(node)
+        while node && node.parent != node
+          unless node.node_type == Browser::DOM::Node::ELEMENT_NODE && node_id = internal_id(node)
+            node = node.parent
+            next
+          end
+
+          root_id = InstanceHandles.root_id_from_node_id(node_id)
+
+          current = node
+          loop do
+            last_id = internal_id(current)
+            return nil unless current = current.parent
+            break if last_id == root_id
+          end
+
+          return node if current == @containers_by_root_id[root_id]
+
+          node = node.parent
+        end
+
+        nil
       end
     end
   end

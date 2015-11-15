@@ -26,11 +26,16 @@ module Hyalite
         index
       end
 
-      def traverse_ancestors(targetID)
-        traverse_parent_path('', targetID, true, false) {|id, traverse_up| yield(id, traverse_up) }
+      def traverse_two_phase(target_id, &cb)
+        traverse_parent_path('', target_id, true, false, &cb)
+        traverse_parent_path(target_id, '', false, true, &cb)
       end
 
-      def traverse_parent_path(start, stop, skip_first, skip_last)
+      def traverse_ancestors(target_id, &cb)
+        traverse_parent_path('', target_id, true, false, &cb)
+      end
+
+      def traverse_parent_path(start, stop, skip_first, skip_last, &cb)
         start = start || ''
         stop = stop || ''
         traverse_up = is_ancestor_id_of(stop, start)
@@ -50,7 +55,7 @@ module Hyalite
       end
 
       def parent_id(id)
-        id ? id.match(/(.+)\\./)[2] : ''
+        id.empty? ? '' : id[0, id.rindex(SEPARATOR)]
       end
 
       def is_ancestor_id_of(ancestor_id, descendant_id)
@@ -58,16 +63,15 @@ module Hyalite
       end
 
       def is_boundary(id, index)
-        id.index(index) == SEPARATOR || index == id.length
+        id[index] == SEPARATOR || index == id.length
       end
 
       def next_descendant_id(ancestor_id, destination_id)
-        if ancestor_id == destination_id
-          return ancestor_id
-        end
+        return ancestor_id if ancestor_id == destination_id
+
         start = ancestor_id.length + SEPARATOR.length
         last = destination_id.index(SEPARATOR, start) || destination_id.length
-        destination_id.slice(start...last)
+        destination_id[0,last]
       end
     end
   end

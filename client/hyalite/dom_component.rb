@@ -1,6 +1,7 @@
 require 'hyalite/multi_children'
 require 'hyalite/dom_property_operations'
 require 'hyalite/internal_component'
+require 'hyalite/browser_event'
 
 module Hyalite
   class DOMComponent
@@ -12,7 +13,6 @@ module Hyalite
     def initialize(element)
       @element = element
       @tag = @element.type.downcase
-      @registration_name_modules = {}
     end
 
     def current_element
@@ -119,8 +119,8 @@ module Hyalite
       @element.props.each do |prop_key, prop_value|
         next unless prop_value
 
-        if @registration_name_modules.has_key?(prop_key)
-          #enqueuePutListener(this._rootNodeID, propKey, propValue, transaction)
+        if BrowserEvent.include?(prop_key)
+          enqueue_put_listener(@root_node_id, prop_key, prop_value, mount_ready)
         else
           if prop_key == :style
             if prop_value
@@ -156,6 +156,16 @@ module Hyalite
       element
     end
 
+    def enqueue_put_listener(id, event_name, listener, mount_ready)
+      container = Mount.container_for_id(id)
+      if container
+        doc = container.node_type == Browser::DOM::Node::ELEMENT_NODE ? container.document : container
+        BrowserEvent.listen_to(event_name, doc)
+      end
+      mount_ready.enqueue do
+        BrowserEvent.put_listener(id, event_name, listener)
+      end
+    end
 
     def is_custom_component(tag, props)
       tag.include?('-') || props.has_key?(:is)
