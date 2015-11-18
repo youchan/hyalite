@@ -1,5 +1,7 @@
 module Hyalite
   class SyntheticEvent
+    attr_reader :event
+
     def initialize(event)
       @event = event
       @listeners = []

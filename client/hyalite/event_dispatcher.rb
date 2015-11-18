@@ -39,15 +39,15 @@ module Hyalite
 
       book_keeping.ancestors.each do |top_level_target|
         top_level_target_id = Mount.node_id(top_level_target) || ''
-        event = @extract_event.call(
+        synthetic_event = @extract_event.call(
           book_keeping.top_level_type,
           top_level_target_id,
           book_keeping.event,
         )
 
-        event.each_listener do |listener, dom_id|
+        synthetic_event.each_listener do |listener, dom_id|
           target = Mount.node(dom_id);
-          listener.call(event, target)
+          listener.call(synthetic_event.event, target)
         end
       end
     end

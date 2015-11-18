@@ -126,7 +126,7 @@ module Hyalite
         dispatch_config = TOP_LEVEL_EVENTS_TO_DISPATCH_CONFIG[top_level_type]
         return [] unless dispatch_config
 
-        SyntheticEvent.new(top_level_type, event).tap do |synthetic_event|
+        SyntheticEvent.new(event).tap do |synthetic_event|
           InstanceHandles.traverse_two_phase(top_level_target_id) do |target_id, upwards|
             listener = listener_at_phase(target_id, dispatch_config, upwards ? :bubbled : :captured)
             synthetic_event.add_listener(listener, target_id) if listener
