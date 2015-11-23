@@ -108,7 +108,7 @@ module Hyalite
 
       if next_content_is_text && last_props[:children] != next_props[:children]
         update_text_content(next_props[:children]);
-      elsif next_props[:children]
+      elsif next_content_is_text && next_props[:children]
         update_children(next_props[:children], mount_ready, context)
       end
     end
