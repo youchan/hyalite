@@ -112,6 +112,11 @@ module Hyalite
       end
     end
 
+    def asap(&callback)
+      @asap_callback_queue.enqueue(&callback)
+      @asap_enqueued = true
+    end
+
     def mount_ready
       @reconcile_transaction.mount_ready
     end

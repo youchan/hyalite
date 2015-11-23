@@ -18,6 +18,10 @@ module Hyalite
     @is_batching_updates = false
 
     class << self
+      def instances_by_root_id(root_id)
+        @instances_by_root_id[root_id]
+      end
+
       def render_subtree_into_container(parent_component, next_element, container, &block)
         next_wrapped_element = ElementObject.new(TopLevelWrapper, nil, nil, nil, next_element)
         prev_component = @instances_by_root_id[root_id(container)]

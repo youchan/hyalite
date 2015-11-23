@@ -53,7 +53,7 @@ module Hyalite
               unmount_component(prev_child, name)
             end
 
-            next_children[name] = instantiate_component(next_element, nil)
+            next_children[name] = Hyalite.instantiate_component(next_element, nil)
           end
         end
 
@@ -67,9 +67,9 @@ module Hyalite
       end
 
       def flatten_children(nested_child_nodes)
-        res = []
+        res = {}
         traverse_children(nested_child_nodes, "") do |name, child_node|
-          res << [name, child_node]
+          res[name] = child_node
         end
 
         res
@@ -97,19 +97,26 @@ module Hyalite
       end
 
       def component_key(component, index)
-        return "$#{component.key}" if component && component.respond_to?(:key) # user provided key
-        index.to_s
+        return "$#{component.key}" if component && component.key # user provided key
+        index.to_s(36)
       end
 
       def should_update_component(prev_element, next_element)
         if prev_element && next_element
           if prev_element.is_a?(String) || prev_element.is_a?(Numeric)
-            return (next_element.is_a?(String) || next_element.is_a?(Numeric))
-          elsif prev_element.respond_to?(:key) && next_element.respond_to?(:key)
-            return (prev_element.type == next_element.type)
+            return next_element.is_a?(String) || next_element.is_a?(Numeric)
+          else
+            return prev_element.type == next_element.type && prev_element.key == next_element.key
           end
         end
         false
+      end
+
+
+      def unmount_children(rendered_children)
+        rendered_children.each do |rendered_child|
+          unmount_component(rendered_child)
+        end
       end
     end
 

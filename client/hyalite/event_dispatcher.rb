@@ -1,9 +1,9 @@
 module Hyalite
   class EventDispatcher
-    def initialize(&extract_event)
+    def initialize(&extract_events)
       @enabled = true
       @listener_bank = {}
-      @extract_event = extract_event
+      @extract_events = extract_events
       @event_queue = []
     end
 
@@ -39,15 +39,18 @@ module Hyalite
 
       book_keeping.ancestors.each do |top_level_target|
         top_level_target_id = Mount.node_id(top_level_target) || ''
-        synthetic_event = @extract_event.call(
+        synthetic_events = @extract_events.call(
           book_keeping.top_level_type,
+          top_level_target,
           top_level_target_id,
           book_keeping.event,
-        )
+        ).flatten
 
-        synthetic_event.each_listener do |listener, dom_id|
-          target = Mount.node(dom_id);
-          listener.call(synthetic_event.event, target)
+        synthetic_events.each do |synthetic_event|
+          synthetic_event.each_listener do |listener, dom_id|
+            target = Mount.node(dom_id);
+            listener.call(synthetic_event.event, target)
+          end
         end
       end
     end

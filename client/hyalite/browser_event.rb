@@ -2,52 +2,54 @@ require 'set'
 require 'math'
 require 'hyalite/event_dispatcher'
 require 'hyalite/synthetic_event'
+require 'hyalite/event_plugin/event_plugin_registry'
+require 'hyalite/event_plugin/simple_event_plugin'
+require 'hyalite/event_plugin/change_event_plugin'
 
 module Hyalite
   module BrowserEvent
-    EVENT_TYPES = {
-      keyDown: {
-        phasedRegistrationNames: {
-          bubbled: "onKeyDown",
-          captured: "onKeyDownCapture"
-        },
-      },
+    TOP_EVENT_MAPPING = {
+      topKeyDown: "keydown",
+      topChange: "change",
+      topInput: "input",
+      topInvalid: "invalid"
     }
-
-    TOP_LEVEL_EVENTS_TO_DISPATCH_CONFIG = {
-      topKeyDown: EVENT_TYPES[:keyDown]
-    }
-
-    REGISTRATION_NAME_DEPENDENCIES = {
-      "onKeyDown" => [:topKeyDown]
-    }
-
-    TOP_EVENT_MAPPING = { topKeyDown: "keydown" }
 
     TOP_LISTENERS_ID_KEY = '_hyliteListenersID' + Math.rand.to_s.chars.drop(2).join
 
     class << self
-      def registration_names
-        @registrasion_names ||= Set.new.tap do |names|
-          TOP_LEVEL_EVENTS_TO_DISPATCH_CONFIG.each_value do |value|
-            value[:phasedRegistrationNames].each_value do |name|
-              names << name
-            end
-          end
+      def enabled?
+        event_dispatcher.enabled?
+      end
+
+      def enabled=(enabled)
+        event_dispatcher.enabled = enabled
+      end
+
+      def event_dispatcher
+        @event_dispatcher ||= EventDispatcher.new do |top_level_type, top_level_target, top_level_target_id, event|
+          event_plugin_registry.extract_events(top_level_type, top_level_target, top_level_target_id, event)
         end
       end
 
+      def event_plugin_registry
+        @event_plugin_registry ||= EventPluginRegistry.new(
+          SimpleEventPlugin.new,
+          ChangeEventPlugin.new
+        )
+      end
+
       def include?(name)
-        registration_names.include? name
+        event_plugin_registry.include? name
       end
 
       def listen_to(registration_name, content_document_handle)
         mount_at = content_document_handle
         is_listening = listening_for_document(mount_at)
-        dependencies = REGISTRATION_NAME_DEPENDENCIES[registration_name]
+        dependencies = event_plugin_registry.dependencies(registration_name)
 
         dependencies.each do |dependency|
-          unless is_listening.has_key? dependency && is_listening[dependency]
+          unless is_listening[dependency]
             case dependency
             when :top_wheel
               nil
@@ -113,23 +115,11 @@ module Hyalite
             #   is_listening[:top_focus] = true
             else
               if TOP_EVENT_MAPPING.has_key? dependency
-                event_dispatcher.trap_bubbled_event(dependency, TOP_EVENT_MAPPING[dependency], mount_at)
+                trap_bubbled_event(dependency, TOP_EVENT_MAPPING[dependency], mount_at)
               end
             end
 
-            is_listening[dependency] = true;
-          end
-        end
-      end
-
-      def extract_event(top_level_type, top_level_target_id, event)
-        dispatch_config = TOP_LEVEL_EVENTS_TO_DISPATCH_CONFIG[top_level_type]
-        return [] unless dispatch_config
-
-        SyntheticEvent.new(event).tap do |synthetic_event|
-          InstanceHandles.traverse_two_phase(top_level_target_id) do |target_id, upwards|
-            listener = listener_at_phase(target_id, dispatch_config, upwards ? :bubbled : :captured)
-            synthetic_event.add_listener(listener, target_id) if listener
+            is_listening[dependency] = true
           end
         end
       end
@@ -152,18 +142,8 @@ module Hyalite
         @already_listening_to[`mount_at.native[#{TOP_LISTENERS_ID_KEY}]`]
       end
 
-      def enabled?
-        event_dispatcher.enabled?
-      end
-
-      def enabled=(enabled)
-        event_dispatcher.enabled = enabled
-      end
-
-      def event_dispatcher
-        @event_dispatcher ||= EventDispatcher.new do |top_level_type, top_level_target_id, event|
-          extract_event(top_level_type, top_level_target_id, event)
-        end
+      def trap_bubbled_event(top_level_type, handler_base_name, handle)
+        event_dispatcher.trap_bubbled_event(top_level_type, handler_base_name, handle)
       end
     end
   end

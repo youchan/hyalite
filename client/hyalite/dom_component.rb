@@ -2,6 +2,7 @@ require 'hyalite/multi_children'
 require 'hyalite/dom_property_operations'
 require 'hyalite/internal_component'
 require 'hyalite/browser_event'
+require 'hyalite/input_wrapper'
 
 module Hyalite
   class DOMComponent
@@ -13,6 +14,7 @@ module Hyalite
     def initialize(element)
       @element = element
       @tag = @element.type.downcase
+      @input_wrapper = InputWrapper.new(self)
     end
 
     def current_element
@@ -22,6 +24,33 @@ module Hyalite
     def mount_component(root_id, mount_ready, context)
       return if @tag == "noscript"
       @root_node_id = root_id
+
+      props = current_element.props
+
+      case @tag
+      # when 'iframe', 'img', 'form', 'video', 'audio'
+      #   this._wrapperState = {
+      #     listeners: null,
+      #   }
+      #   transaction.getReactMountReady().enqueue(trapBubbledEventsLocal, this);
+      # when 'button'
+      #   props = ReactDOMButton.getNativeProps(this, props, nativeParent);
+      when 'input'
+        @input_wrapper.mount_wrapper
+        props = @input_wrapper.native_props
+      # when 'option'
+      #   ReactDOMOption.mountWrapper(this, props, nativeParent);
+      #   props = ReactDOMOption.getNativeProps(this, props);
+      # when 'select'
+      #   ReactDOMSelect.mountWrapper(this, props, nativeParent);
+      #   props = ReactDOMSelect.getNativeProps(this, props);
+      #   transaction.getReactMountReady().enqueue(trapBubbledEventsLocal, this);
+      # when 'textarea'
+      #   ReactDOMTextarea.mountWrapper(this, props, nativeParent);
+      #   props = ReactDOMTextarea.getNativeProps(this, props);
+      #   transaction.getReactMountReady().enqueue(trapBubbledEventsLocal, this);
+      end
+
       element = create_open_tag_markup_and_put_listeners(mount_ready, @element.props)
       create_content_markup(mount_ready, element, context)
     end
