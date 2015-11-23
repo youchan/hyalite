@@ -32,10 +32,10 @@ module Hyalite
       true
     end
 
-    def set_state(states)
+    def set_state(states, &block)
       @updator.enqueue_set_state(self, states)
       if block_given?
-        @updator.enqueue_callback { yield }
+        @updator.enqueue_callback(self, &block)
       end
     end
 
