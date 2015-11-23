@@ -98,7 +98,7 @@ module Hyalite
 
     def update_dom_children(last_props, next_props, mount_ready, context)
       last_contet_is_text = is_text_content(last_props[:children])
-      next_content_is_text = is_text_content(next_props[:chilren])
+      next_content_is_text = is_text_content(next_props[:children])
 
       if !last_contet_is_text && next_content_is_text
         update_children(null, transaction, context)

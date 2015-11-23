@@ -49,7 +49,7 @@ module Hyalite
       if @pending_element
         receive_component(
           this,
-          @pendingElement || this._currentElement,
+          @pending_element || this._currentElement,
           mount_ready,
           this._context
         );
