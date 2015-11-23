@@ -1,6 +1,6 @@
 module Hyalite
   class ElementObject
-    attr_reader :type, :ref, :props
+    attr_reader :type, :key, :ref, :props
 
     def initialize(type, key, ref, owner, props)
       @type = type
