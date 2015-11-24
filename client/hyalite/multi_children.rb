@@ -47,11 +47,11 @@ module Hyalite
         prev_child = prev_children && prev_children[name]
         if prev_child == next_child
           move_child(prev_child, next_index, last_index)
-          last_index = Math.max(prev_child.mount_index, last_index)
+          last_index = [prev_child.mount_index, last_index].max
           prev_child.mount_index = next_index
         else
           if prev_child
-            last_index = Math.max(prev_child.mount_index, last_index)
+            last_index = [prev_child.mount_index, last_index].max
             unmount_child_by_name(prev_child, name)
           end
 
@@ -91,6 +91,12 @@ module Hyalite
       end
     end
 
+    def move_child(child, to_index, last_index)
+      if child.mount_index < last_index
+        enqueue_move(@root_node_id, child.mount_index, to_index)
+      end
+    end
+
     def unmount_child(child)
       enqueueRemove(this._rootNodeID, child._mountIndex);
       child.mount_index = null
@@ -104,15 +110,27 @@ module Hyalite
     end
 
     def enqueue_remove(parent_id, from_index)
-      @update_queue << ({
+      @update_queue << {
         parentID: parent_id,
         parentNode: nil,
         type: :remove_node,
         markupIndex: nil,
         content: nil,
         fromIndex: from_index,
-        toIndex: nil,
-      })
+        toIndex: nil
+      }
+    end
+
+    def enqueue_move(parent_id, from_index, to_index)
+      @update_queue << {
+        parentID: parent_id,
+        parentNode: nil,
+        type: :move_existing,
+        markupIndex: nil,
+        content: nil,
+        fromIndex: from_index,
+        toIndex: to_index
+      }
     end
 
     def process_queue

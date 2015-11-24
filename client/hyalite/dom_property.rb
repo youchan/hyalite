@@ -183,6 +183,22 @@ module Hyalite
       @property_info[name]
     end
 
+    def default_value_for_property(node_name, prop)
+      node_defaults = default_value_cache[node_name]
+      unless node_defaults
+        default_value_cache[nodeName] = node_defaults = {}
+      end
+      unless node_defaults.include? prop
+        test_element = Document.create(node_name)
+        node_defaults[prop] = test_element[prop]
+      end
+      node_defaults[prop]
+    end
+
+    def default_value_cache
+      @default_value_cache ||= {}
+    end
+
     def self.is_custom_attribute(attribute_name)
       /^(data|aria)-[a-z_][a-z\d_.\-]*$/ =~ attribute_name
     end

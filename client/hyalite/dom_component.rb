@@ -90,13 +90,13 @@ module Hyalite
       last_props = prev_element.props
       next_props = @element.props
 
-      # case @tag
+      case @tag
       # when 'button':
       #   lastProps = ReactDOMButton.getNativeProps(this, lastProps);
       #   nextProps = ReactDOMButton.getNativeProps(this, nextProps);
-      # when 'input':
-      #   ReactDOMInput.updateWrapper(this);
-      #   lastProps = ReactDOMInput.getNativeProps(this, lastProps);
+      when 'input':
+        @input_wrapper.update_wrapper
+        last_props = @input_wrapper.native_props(last_props)
       #   nextProps = ReactDOMInput.getNativeProps(this, nextProps);
       # when 'option':
       #   lastProps = ReactDOMOption.getNativeProps(this, lastProps);
@@ -108,7 +108,7 @@ module Hyalite
       #   ReactDOMTextarea.updateWrapper(this);
       #   lastProps = ReactDOMTextarea.getNativeProps(this, lastProps);
       #   nextProps = ReactDOMTextarea.getNativeProps(this, nextProps);
-      # end
+      end
 
       # assertValidProps(this, nextProps);
       #update_dom_properties(lastProps, nextProps, transaction);
@@ -126,19 +126,33 @@ module Hyalite
     private
 
     def update_dom_children(last_props, next_props, mount_ready, context)
-      last_contet_is_text = is_text_content(last_props[:children])
-      next_content_is_text = is_text_content(next_props[:children])
+      last_content = last_props[:children] if is_text_content(last_props[:children])
+      next_content = next_props[:children] if is_text_content(next_props[:children])
 
-      if !last_contet_is_text && next_content_is_text
-        update_children(null, transaction, context)
-      elsif last_contet_is_text && !next_content_is_text
-        update_text_content('');
+      last_html = last_props[:dangerouslySetInnerHTML].try {|_| _['__html'] }
+      next_html = next_props[:dangerouslySetInnerHTML].try {|_| _['__html'] }
+
+      last_children = last_props[:children] unless last_content
+      next_children = next_props[:children] unless next_content
+
+      last_has_content_or_html = !last_content.nil? || !last_html.nil?
+      next_has_content_or_html = !next_content.nil? || !next_html.nil?
+      if last_children && next_children.nil?
+        update_children(nil, mount_ready, context)
+      elsif last_has_content_or_html && !next_has_content_or_html
+        update_text_content('')
       end
 
-      if next_content_is_text && last_props[:children] != next_props[:children]
-        update_text_content(next_props[:children]);
-      elsif next_content_is_text && next_props[:children]
-        update_children(next_props[:children], mount_ready, context)
+      if next_content
+        unless last_content == next_content
+          update_text_content(next_content.to_s)
+        end
+      elsif next_html
+        unless last_html == next_html
+          update_markup(next_html.to_s)
+        end
+      elsif next_children.any?
+        update_children(next_children, mount_ready, context)
       end
     end
 

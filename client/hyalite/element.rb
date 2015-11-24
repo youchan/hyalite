@@ -9,5 +9,9 @@ module Hyalite
       @owner = owner
       @props = props
     end
+
+    def inspect
+      "<#{type} #{props.inspect} />"
+    end
   end
 end

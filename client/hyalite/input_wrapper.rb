@@ -1,5 +1,6 @@
 require 'json'
 require 'hyalite/linked_value_utils'
+require 'hyalite/dom_operations'
 
 module Hyalite
   class InputWrapper
@@ -38,10 +39,20 @@ module Hyalite
     end
 
     def update_wrapper
-      checked = @dom_component.current_element.props[:checked]
+      props = @dom_component.current_element.props
+      checked = props[:checked]
       if checked
         node = Mount.node(@dom_component.root_node_id)
         node[:checked] = checked
+      end
+
+      value = LinkedValueUtils.value(props)
+      if value
+        DOMOperations.update_property_by_id(
+          @dom_component.root_node_id,
+          'value',
+          value.to_s
+        )
       end
     end
 
