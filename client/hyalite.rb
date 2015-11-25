@@ -28,7 +28,14 @@ module Hyalite
         end
       end
 
-      props[:children] = children.length == 1 ? children.first : children
+      props[:children] = case children.length
+                         when 0
+                           nil
+                         when 1
+                           children.first
+                         else
+                           children
+                         end
 
       ElementObject.new(type, key, ref, Hyalite.current_owner, props)
     end
@@ -52,6 +59,8 @@ module Hyalite
         end
       when String, Numeric
         TextComponent.new node
+      when EmptyComponent
+        CompositeComponent.new node
       else
         raise "Encountered invalid Hyalite node: #{node}"
       end
