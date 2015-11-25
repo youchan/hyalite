@@ -159,7 +159,7 @@ module Hyalite
     def create_open_tag_markup_and_put_listeners(mount_ready, props)
       element = $document.create_element(@tag)
 
-      @element.props.each do |prop_key, prop_value|
+      props.each do |prop_key, prop_value|
         next unless prop_value
 
         if BrowserEvent.include?(prop_key)
@@ -193,7 +193,11 @@ module Hyalite
       else
         mount_images = mount_children(@element.props[:children], mount_ready, context)
         mount_images.each do |image|
-          image.append_to(element) if image
+          if image.is_a?(String)
+            element.text = image
+          else
+            image.append_to(element) if image
+          end
         end
       end
       element

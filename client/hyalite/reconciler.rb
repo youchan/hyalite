@@ -7,7 +7,7 @@ module Hyalite
     class << self
       def mount_component(internal_instance, root_id, mount_ready, context)
         markup = internal_instance.mount_component(root_id, mount_ready, context)
-        if internal_instance.current_element.ref
+        if internal_instance.current_element.respond_to?(:ref) && internal_instance.current_element.ref
           mount_ready.enqueue do
             internal_instanc.current_element.owner.attach_ref(internal_instanc.current_element.ref, instance)
           end
@@ -97,7 +97,7 @@ module Hyalite
       end
 
       def component_key(component, index)
-        return "$#{component.key}" if component && component.respond_to?(:key)
+        return "$#{component.key}" if component && component.respond_to?(:key) && component.key
         index.to_s(36)
       end
 
