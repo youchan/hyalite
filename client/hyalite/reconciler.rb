@@ -76,13 +76,13 @@ module Hyalite
       end
 
       def traverse_children(children, name_so_far)
-        # children = nil if children == true || children == false
+        children = nil if children == true || children == false
 
-        # if children.nil? || children === String || children === Numeric || ElementObject.is_valid_element(children)
-        #   name = name_so_far.blank? ? SEPARATOR + component_key(children, 0) : name_so_far
-        #   yield [name, child_node]
-        #   return 1
-        # end
+        if children.nil? || children.is_a?(String) || children.is_a?(Numeric)
+          name = name_so_far.empty? ? SEPARATOR + component_key(children, 0) : name_so_far
+          yield [name, children]
+          return 1
+        end
 
         case children
         when Array
@@ -97,7 +97,7 @@ module Hyalite
       end
 
       def component_key(component, index)
-        return "$#{component.key}" if component && component.key # user provided key
+        return "$#{component.key}" if component && component.respond_to?(:key)
         index.to_s(36)
       end
 
