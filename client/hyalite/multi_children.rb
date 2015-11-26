@@ -61,9 +61,11 @@ module Hyalite
       error_thrown = true
       begin
         prev_children = @rendered_children
-        Reconciler.unmount_children(prev_children)
-        prev_children.each do |prev_child|
-          unmount_child(prev_child)
+        if prev_children
+          Reconciler.unmount_children(prev_children)
+          prev_children.each do |prev_child|
+            unmount_child(prev_child)
+          end
         end
         set_text_content(next_content)
         error_thrown = false
@@ -216,6 +218,27 @@ module Hyalite
 
     def create_child(child, mount_image)
       enqueue_markup(@root_node_id, mount_image, child.mount_index)
+    end
+
+    def clear_queue
+      update_queue.clear
+      markup_queue.clear
+    end
+
+    def set_text_content(text_content)
+      enqueue_text_content(@root_node_id, text_content)
+    end
+
+    def enqueue_text_content(parent_id, text_content)
+      update_queue << {
+        parentID: parent_id,
+        parentNode: nil,
+        type: :text_content,
+        markupIndex: nil,
+        textContent: text_content,
+        fromIndex: nil,
+        toIndex: nil
+      }
     end
 
     def enqueue_markup(parent_id, markup, to_index)

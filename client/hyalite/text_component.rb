@@ -29,7 +29,7 @@ module Hyalite
     def receive_component(next_text, mount_ready)
       if next_text != @text
         @text = next_text
-        DOMOperations.update_text_content(node, @text)
+        node.text = @text
       end
     end
 
