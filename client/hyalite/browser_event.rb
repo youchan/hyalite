@@ -128,6 +128,15 @@ module Hyalite
         event_dispatcher.put_listener(id, event_name, listener)
       end
 
+      def delete_all_listeners(id)
+        event_dispatcher.delete_all_listeners(id) do |registration_name, id|
+          plugin = event_plugin_registry[registration_name]
+          if plugin.respond_to? :will_delete_listener
+            plugin.will_delete_listener(id, registration_name)
+          end
+        end
+      end
+
       def listener_at_phase(id, dispatch_config, propagation_phase)
         registration_name = dispatch_config[:phasedRegistrationNames][propagation_phase]
         event_dispatcher.get_listener(id, registration_name)

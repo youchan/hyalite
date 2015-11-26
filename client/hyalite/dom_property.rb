@@ -1,5 +1,7 @@
 module Hyalite
   module DOMProperty
+    ID_ATTRIBUTE_NAME = 'data-hyalite-id'
+
     MUST_USE_ATTRIBUTE           = 1
     MUST_USE_PROPERTY            = 2
     HAS_BOOLEAN_VALUE            = 4

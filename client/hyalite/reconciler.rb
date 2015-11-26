@@ -23,7 +23,7 @@ module Hyalite
       def receive_component(internal_instance, next_element, mount_ready, context)
         prev_element = internal_instance.current_element
 
-        return if next_element == prev_element && next_element.owner
+        return if next_element == prev_element && internal_instance.respond_to?(:context) && context == internal_instance.context
 
         # refs_changed = ReactRef.should_update_refs(prev_element, next_element)
         #
@@ -111,7 +111,6 @@ module Hyalite
         end
         false
       end
-
 
       def unmount_children(rendered_children)
         rendered_children.each do |rendered_child|

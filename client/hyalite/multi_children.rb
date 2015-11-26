@@ -1,6 +1,5 @@
 module Hyalite
   module MultiChildren
-
     def mount_children(nested_children, mount_ready, context)
       children = instantiate_children(nested_children, mount_ready, context)
       @rendered_children = children
@@ -15,23 +14,12 @@ module Hyalite
       end
     end
 
-    # def update_children(next_nested_children, mount_ready, context)
-    #   @update_depth += 1
-    #   error_thrown = true;
-    #   begin
-    #     update_children_inner(next_nested_children, mount_ready, context)
-    #     error_thrown = false
-    #   ensure
-    #     @update_depth -= 1
-    #     unless @update_depth
-    #       if error_thrown
-    #         clear_queue
-    #       else
-    #         process_queue
-    #       end
-    #     end
-    #   end
-    # end
+    def unmount_children
+      if @rendered_children
+        Reconciler.unmount_children(@rendered_children)
+        @rendered_children = nil
+      end
+    end
 
     def update_children(next_nested_children, mount_ready, context)
       prev_children = @rendered_children
@@ -52,7 +40,7 @@ module Hyalite
         else
           if prev_child
             last_index = [prev_child.mount_index, last_index].max
-            unmount_child_by_name(prev_child, name)
+            unmount_child(prev_child)
           end
 
           mount_child_by_name_at_index(next_child, name, next_index, mount_ready, context)
@@ -62,7 +50,7 @@ module Hyalite
 
       prev_children.each do |name, prev_child|
         unless next_children && next_children.has_key?(name)
-          unmount_child_by_name(prev_child, name)
+          unmount_child(prev_child)
         end
       end
     end
@@ -72,7 +60,7 @@ module Hyalite
       @update_depth += 1
       error_thrown = true
       begin
-        prev_children = @rendered_children;
+        prev_children = @rendered_children
         Reconciler.unmount_children(prev_children)
         prev_children.each do |prev_child|
           unmount_child(prev_child)
@@ -97,9 +85,13 @@ module Hyalite
       end
     end
 
+    def remove_child(child)
+      enqueue_remove(@root_node_id, child.mount_index)
+    end
+
     def unmount_child(child)
-      enqueueRemove(this._rootNodeID, child._mountIndex);
-      child.mount_index = null
+      remove_child(child)
+      child.mount_index = nil
     end
 
     def instantiate_children(nested_child_nodes, context)
@@ -110,7 +102,7 @@ module Hyalite
     end
 
     def enqueue_remove(parent_id, from_index)
-      @update_queue << {
+      update_queue << {
         parentID: parent_id,
         parentNode: nil,
         type: :remove_node,
@@ -122,7 +114,7 @@ module Hyalite
     end
 
     def enqueue_move(parent_id, from_index, to_index)
-      @update_queue << {
+      update_queue << {
         parentID: parent_id,
         parentNode: nil,
         type: :move_existing,
@@ -134,8 +126,8 @@ module Hyalite
     end
 
     def process_queue
-      if @update_queue.any?
-        process_children_updates(@update_queue, @markup_queue)
+      if update_queue.any?
+        process_children_updates(update_queue, markup_queue)
         clear_queue
       end
     end
@@ -204,5 +196,40 @@ module Hyalite
         parent_node[index].add_previous_sibling(child_node)
       end
     end
+
+    private
+
+    def update_queue
+      @update_queue ||= []
+    end
+
+    def markup_queue
+      @markup_queue ||= []
+    end
+
+    def mount_child_by_name_at_index(child, name, index, mount_ready, context)
+      root_id = @root_node_id + name
+      mount_image = Reconciler.mount_component(child, root_id, mount_ready, context)
+      child.mount_index = index
+      create_child(child, mount_image)
+    end
+
+    def create_child(child, mount_image)
+      enqueue_markup(@root_node_id, mount_image, child.mount_index)
+    end
+
+    def enqueue_markup(parent_id, markup, to_index)
+      markup_queue << markup
+      update_queue << {
+        parentID: parent_id,
+        parentNode: nil,
+        type: :insert_markup,
+        markupIndex: markup_queue.length - 1,
+        textContent: nil,
+        fromIndex: nil,
+        toIndex: to_index
+      }
+    end
+
   end
 end

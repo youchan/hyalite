@@ -24,8 +24,10 @@ module Hyalite
     def component_did_mount
     end
 
-    def component_will_update
+    def component_will_unmount
+    end
 
+    def component_will_update
     end
 
     def should_component_update(props, state, context)

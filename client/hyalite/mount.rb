@@ -141,6 +141,10 @@ module Hyalite
         @node_cache ||= {}
       end
 
+      def purge_id(id)
+        @node_cache.delete(id)
+      end
+
       def node_id(node)
         id = internal_id(node)
         if id
@@ -266,6 +270,17 @@ module Hyalite
         end
 
         nil
+      end
+
+      def update_root_component(prev_component, next_element, container, &callback)
+        # Mount.scroll_monitor(container) do
+        #   UpdateQueue.enqueue_element_internal(prev_component, next_element)
+        #   if block_given?
+        #     ReactUpdateQueue.enqueueCallbackInternal(prevComponent, callback)
+        #   end
+        # end
+
+        prev_component
       end
     end
   end

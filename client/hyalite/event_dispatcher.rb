@@ -71,6 +71,14 @@ module Hyalite
       @listener_bank[name].try {|bank| bank[id] }
     end
 
+    def delete_all_listeners(id, &block)
+      @listener_bank.each do |registration_name, bank|
+        next unless bank[id]
+        yield(id, registration_name) if block_given?
+        bank.delete(id)
+      end
+    end
+
     class TopLevelCallbackBookKeeping
       attr_reader :event, :top_level_type, :ancestors
 

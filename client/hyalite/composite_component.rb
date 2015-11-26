@@ -45,6 +45,27 @@ module Hyalite
       markup
     end
 
+    def unmount_component
+
+      @instance.component_will_unmount
+
+      Reconciler.unmount_component(@rendered_component)
+      @rendered_component = nil
+      @instance = nil
+
+      @pending_state_queue = nil
+      @pending_replace_state = false
+      @pending_force_update = false
+      @pending_callbacks = nil
+      @pending_element = nil
+
+      @context = nil
+      @root_node_id = nil
+      @top_level_wrapper = nil
+
+      Hyalite.instance_map.delete(@instance)
+    end
+
     def perform_update_if_necessary(mount_ready)
       if @pending_element
         receive_component(
@@ -120,7 +141,7 @@ module Hyalite
 
       @pending_element = nil
 
-      updateComponent(
+      update_component(
         mount_ready,
         prev_element,
         next_element,

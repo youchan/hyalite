@@ -56,7 +56,7 @@ module Hyalite
     end
 
     def unmount_component
-      # case @tag
+      case @tag
       # when 'iframe', 'img', 'form'
       #   listeners = this._wrapperState.listeners;
       #   if (listeners) {
@@ -64,20 +64,20 @@ module Hyalite
       #       listeners[i].remove();
       #     }
       #   }
-      # case 'input':
-      #   ReactDOMInput.unmountWrapper(this);
-      # end
+      when 'input'
+        InputWrapper.unmount_wrapper
+      end
 
-      # unmount_children
-      # ReactBrowserEventEmitter.deleteAllListeners(this._rootNodeID);
-      # ReactComponentBrowserEnvironment.unmountIDFromEnvironment(this._rootNodeID);
-      # this._rootNodeID = null;
-      # this._wrapperState = null;
-      # if (this._nodeWithLegacyProperties) {
-      #   var node = this._nodeWithLegacyProperties;
-      #   node._reactInternalComponent = null;
-      #   this._nodeWithLegacyProperties = null;
-      # }
+      unmount_children
+      BrowserEvent.delete_all_listeners(@root_node_id)
+      Mount.purge_id(@root_node_id)
+      @root_node_id = nil
+      # @wrapper_state = null;
+      if @node_with_legacy_properties
+        node = @node_with_legacy_properties
+        node.internal_component = nil
+        @node_with_legacy_properties = nil
+      end
     end
 
     def receive_component(next_element, mount_ready, context)
@@ -151,7 +151,7 @@ module Hyalite
         unless last_html == next_html
           update_markup(next_html.to_s)
         end
-      elsif next_children.any?
+      elsif next_children
         update_children(next_children, mount_ready, context)
       end
     end

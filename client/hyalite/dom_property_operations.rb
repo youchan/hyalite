@@ -48,7 +48,6 @@ module Hyalite
       end
 
       def set_value_for_property(node, name, value)
-        puts ">>> set_value_for_property node=#{node} name=#{name} value=#{value}"
         property_info = DOMProperty.property_info(name)
         if property_info
           mutation_method = property_info[:mutation_method]
@@ -96,6 +95,10 @@ module Hyalite
         elsif DOMProperty.is_custom_attribute(name)
           node.remove_attribute(name)
         end
+      end
+
+      def set_attribute_for_id(node, id)
+        node[DOMProperty::ID_ATTRIBUTE_NAME] = id
       end
 
       def should_ignore_value(property_info, value)
