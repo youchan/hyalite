@@ -1,12 +1,13 @@
 module Hyalite
   module Component
-    attr_accessor :props, :state, :context
+  attr_accessor :props, :state, :context, :refs
 
     def init_component(props, context, updator)
       @props = props
       @context = context
       @updator = updator
       @state = get_initial_state
+      @refs = nil
     end
 
     def get_initial_state

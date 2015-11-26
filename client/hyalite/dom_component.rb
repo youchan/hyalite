@@ -123,7 +123,15 @@ module Hyalite
       end
     end
 
+    def public_instance
+      native_node
+    end
+
     private
+
+    def native_node
+      @native_node ||= Mount.node(@root_node_id)
+    end
 
     def update_dom_children(last_props, next_props, mount_ready, context)
       last_content = last_props[:children] if is_text_content(last_props[:children])

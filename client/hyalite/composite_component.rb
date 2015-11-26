@@ -94,6 +94,11 @@ module Hyalite
       "CompositeComponent: instance: #{@instance.inspect}"
     end
 
+    def attach_ref(ref, component)
+      @instance.refs ||= {}
+      @instance.refs[ref] = component.public_instance
+    end
+
     private
 
     def render_component(instance)
