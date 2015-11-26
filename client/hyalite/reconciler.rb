@@ -9,7 +9,7 @@ module Hyalite
         markup = internal_instance.mount_component(root_id, mount_ready, context)
         if internal_instance.current_element.respond_to?(:ref) && internal_instance.current_element.ref
           mount_ready.enqueue do
-            internal_instanc.current_element.owner.attach_ref(internal_instanc.current_element.ref, instance)
+            internal_instance.current_element.owner.attach_ref(internal_instance.current_element.ref, internal_instance)
           end
         end
         markup
