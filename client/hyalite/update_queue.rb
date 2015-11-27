@@ -33,6 +33,20 @@ module Hyalite
       def enqueue_update(internal_instance)
         Hyalite.updates.enqueue_update(internal_instance)
       end
+
+      def enqueue_element_internal(internal_instance, new_element)
+        internal_instance.pending_element = new_element
+        enqueue_update(internal_instance)
+      end
+
+      def enqueue_callback_internal(internal_instance, &callback)
+        if internal_instance.pending_callbacks
+          internal_instance.pending_callbacks << callback
+        else
+          internal_instance.pending_callbacks = [callback]
+        end
+        enqueue_update(internal_instance)
+      end
     end
   end
 end

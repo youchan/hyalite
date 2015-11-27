@@ -7,7 +7,7 @@ module Hyalite
     include InternalComponent
 
     attr_reader :current_element, :rendered_component
-    attr_accessor :top_level_wrapper, :pending_state_queue, :mount_order, :pending_callbacks
+    attr_accessor :top_level_wrapper, :pending_state_queue, :mount_order, :pending_callbacks, :pending_element
 
     @next_mount_id = 1
 

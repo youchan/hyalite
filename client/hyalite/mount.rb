@@ -273,12 +273,10 @@ module Hyalite
       end
 
       def update_root_component(prev_component, next_element, container, &callback)
-        # Mount.scroll_monitor(container) do
-        #   UpdateQueue.enqueue_element_internal(prev_component, next_element)
-        #   if block_given?
-        #     ReactUpdateQueue.enqueueCallbackInternal(prevComponent, callback)
-        #   end
-        # end
+        UpdateQueue.enqueue_element_internal(prev_component, next_element)
+        if block_given?
+          UpdateQueue.enqueue_callback_internal(prev_component, &callback)
+        end
 
         prev_component
       end
