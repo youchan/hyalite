@@ -127,6 +127,14 @@ module Hyalite
       native_node
     end
 
+    def to_s
+      {
+        tag: @tag,
+        root_node_id: root_node_id,
+        rendered_children: @rendered_children,
+      }.to_s
+    end
+
     private
 
     def native_node

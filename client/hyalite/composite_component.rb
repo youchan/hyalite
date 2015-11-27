@@ -78,14 +78,13 @@ module Hyalite
     def perform_update_if_necessary(mount_ready)
       if @pending_element
         receive_component(
-          this,
-          @pending_element || this._currentElement,
+          @pending_element || current_element,
           mount_ready,
-          this._context
-        );
+          @context
+        )
       end
 
-      if @pending_state_queue.any? || @pending_force_update
+      if (@pending_state_queue && @pending_state_queue.any?) || @pending_force_update
         update_component(
           mount_ready,
           @current_element,
@@ -224,17 +223,18 @@ module Hyalite
     end
 
     def process_pending_state(props, context)
-      replace = @pending_replace_state;
-      @pending_replace_state = false;
+      replace = @pending_replace_state
+      @pending_replace_state = false
 
       return @instance.state unless @pending_state_queue
 
-      next_state = replace ? @pending_state_queue.shift : @instance.state
-      @pending_state_queue.each do |queue|
-        next_state = queue.is_a?(Proc) ? queue.call(@instance, next_state, props, context) : queue
-      end
+      queue = @pending_state_queue
+      @pending_state_queue = nil
 
-      next_state
+
+      queue.each_with_object(replace ? {} : @instance.state) do |partial, next_state|
+        next_state.merge! (partial.is_a?(Proc) ? partial.call(@instance, next_state, props, context) : partial)
+      end
     end
 
   end
