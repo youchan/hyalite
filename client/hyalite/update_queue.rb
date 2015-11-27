@@ -16,7 +16,7 @@ module Hyalite
 
         internal_instance.pending_callbacks ||= []
         internal_instance.pending_callbacks << block
-        enqueueUpdate(internal_instance);
+        enqueue_update(internal_instance);
       end
 
       def enqueue_set_state(public_instance, partial_state)
