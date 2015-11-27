@@ -31,6 +31,15 @@ module Hyalite
 
       Hyalite.instance_map[@instance] = self
 
+      @pending_state_queue = nil
+      @pending_replace_state = false
+      @pending_force_update = false
+
+      @instance.component_will_mount
+      if @pending_state_queue
+        @instance.state = process_pending_state(@instance.props, @instance.context)
+      end
+
       @rendered_component = Hyalite.instantiate_component(render_component(@instance))
 
       markup = Reconciler.mount_component(
