@@ -67,12 +67,11 @@ module Hyalite
       end
 
       def flatten_children(nested_child_nodes)
-        res = {}
-        traverse_children(nested_child_nodes, "") do |name, child_node|
-          res[name] = child_node
+        {}.tap do |res|
+          traverse_children(nested_child_nodes, "") do |name, child_node|
+            res[name] = child_node if child_node
+          end
         end
-
-        res
       end
 
       def traverse_children(children, name_so_far)
