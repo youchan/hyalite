@@ -87,9 +87,9 @@ module Hyalite
       end
 
       def register_container(container)
-        node_id = root_id(container)
-        if node_id
-          root_id = InstanceHandles.root_id_from_node_id(node_id)
+        root_id = root_id(container)
+        if root_id
+          root_id = InstanceHandles.root_id_from_node_id(root_id)
         end
 
         unless root_id
