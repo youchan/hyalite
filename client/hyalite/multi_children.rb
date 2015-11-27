@@ -25,9 +25,7 @@ module Hyalite
       prev_children = @rendered_children
       next_children = Reconciler.update_children(prev_children, next_nested_children, mount_ready, context)
       @rendered_children = next_children
-      if next_children.nil? && prev_children.nil?
-        return
-      end
+      return if next_children.nil? && prev_children.nil?
 
       last_index = 0
       next_index = 0
@@ -83,12 +81,12 @@ module Hyalite
 
     def move_child(child, to_index, last_index)
       if child.mount_index < last_index
-        enqueue_move(@root_node_id, child.mount_index, to_index)
+        enqueue_move(root_node_id, child.mount_index, to_index)
       end
     end
 
     def remove_child(child)
-      enqueue_remove(@root_node_id, child.mount_index)
+      enqueue_remove(root_node_id, child.mount_index)
     end
 
     def unmount_child(child)
@@ -210,14 +208,14 @@ module Hyalite
     end
 
     def mount_child_by_name_at_index(child, name, index, mount_ready, context)
-      root_id = @root_node_id + name
+      root_id = root_node_id + name
       mount_image = Reconciler.mount_component(child, root_id, mount_ready, context)
       child.mount_index = index
       create_child(child, mount_image)
     end
 
     def create_child(child, mount_image)
-      enqueue_markup(@root_node_id, mount_image, child.mount_index)
+      enqueue_markup(root_node_id, mount_image, child.mount_index)
     end
 
     def clear_queue
@@ -226,7 +224,7 @@ module Hyalite
     end
 
     def set_text_content(text_content)
-      enqueue_text_content(@root_node_id, text_content)
+      enqueue_text_content(root_node_id, text_content)
     end
 
     def enqueue_text_content(parent_id, text_content)
