@@ -91,30 +91,6 @@ module Hyalite
       }.to_h
     end
 
-    def enqueue_remove(parent_id, from_index)
-      MultiChildren.update_queue << {
-        parentID: parent_id,
-        parentNode: nil,
-        type: :remove_node,
-        markupIndex: nil,
-        content: nil,
-        fromIndex: from_index,
-        toIndex: nil
-      }
-    end
-
-    def enqueue_move(parent_id, from_index, to_index)
-      MultiChildren.update_queue << {
-        parentID: parent_id,
-        parentNode: nil,
-        type: :move_existing,
-        markupIndex: nil,
-        content: nil,
-        fromIndex: from_index,
-        toIndex: to_index
-      }
-    end
-
     private
 
     class << self
@@ -241,6 +217,30 @@ module Hyalite
 
     def set_text_content(text_content)
       enqueue_text_content(root_node_id, text_content)
+    end
+
+    def enqueue_remove(parent_id, from_index)
+      MultiChildren.update_queue << {
+        parentID: parent_id,
+        parentNode: nil,
+        type: :remove_node,
+        markupIndex: nil,
+        content: nil,
+        fromIndex: from_index,
+        toIndex: nil
+      }
+    end
+
+    def enqueue_move(parent_id, from_index, to_index)
+      MultiChildren.update_queue << {
+        parentID: parent_id,
+        parentNode: nil,
+        type: :move_existing,
+        markupIndex: nil,
+        content: nil,
+        fromIndex: from_index,
+        toIndex: to_index
+      }
     end
 
     def enqueue_text_content(parent_id, text_content)
