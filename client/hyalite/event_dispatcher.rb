@@ -62,17 +62,17 @@ module Hyalite
       Hyalite.updates.batched_updates { handle_top_level(book_keeping) }
     end
 
-    def put_listener(id, name, listener)
-      listeners = @listener_bank[name] ||= {}
+    def put_listener(id, registration_name, listener)
+      listeners = @listener_bank[registration_name] ||= {}
       listeners[id] = listener
     end
 
-    def get_listener(id, name)
-      @listener_bank[name].try {|bank| bank[id] }
+    def get_listener(id, registration_name)
+      @listener_bank[registration_name].try {|listeners| listeners[id] }
     end
 
-    def delete_listener(id, name)
-      if @listener_bank.has_key? name
+    def delete_listener(id, registration_name)
+      if @listener_bank.has_key? registration_name
         yield(id, name)
         @listener_bank[registration_name].delete(id)
       end
