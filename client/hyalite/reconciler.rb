@@ -112,7 +112,7 @@ module Hyalite
       end
 
       def unmount_children(rendered_children)
-        rendered_children.each do |rendered_child|
+        rendered_children.values.each do |rendered_child|
           unmount_component(rendered_child)
         end
       end
