@@ -65,7 +65,7 @@ module Hyalite
       #     }
       #   }
       when 'input'
-        InputWrapper.unmount_wrapper
+        @input_wrapper.unmount_wrapper
       end
 
       unmount_children
