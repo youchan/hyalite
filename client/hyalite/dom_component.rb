@@ -94,7 +94,7 @@ module Hyalite
       # when 'button':
       #   lastProps = ReactDOMButton.getNativeProps(this, lastProps);
       #   nextProps = ReactDOMButton.getNativeProps(this, nextProps);
-      when 'input':
+      when 'input'
         @input_wrapper.update_wrapper
         last_props = @input_wrapper.native_props(last_props)
       #   nextProps = ReactDOMInput.getNativeProps(this, nextProps);

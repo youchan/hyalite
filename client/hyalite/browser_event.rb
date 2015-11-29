@@ -129,7 +129,7 @@ module Hyalite
       end
 
       def delete_all_listeners(id)
-        event_dispatcher.delete_all_listeners(id) do |registration_name, id|
+        event_dispatcher.delete_all_listeners(id) do |id, registration_name|
           plugin = event_plugin_registry[registration_name]
           if plugin.respond_to? :will_delete_listener
             plugin.will_delete_listener(id, registration_name)

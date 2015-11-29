@@ -80,7 +80,7 @@ module Hyalite
       def delete_value_for_property(node, name)
         property_info = DOMProperty.property_info(name)
         if property_info
-          mutation_method = propertyInfo[:mutation_method]
+          mutation_method = property_info[:mutation_method]
           if mutation_method
             mutation_method.call(node, nil)
           elsif property_info[:must_use_attribute]
