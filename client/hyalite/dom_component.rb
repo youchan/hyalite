@@ -111,7 +111,7 @@ module Hyalite
       end
 
       # assertValidProps(this, nextProps);
-      #update_dom_properties(lastProps, nextProps, transaction);
+      update_dom_properties(last_props, next_props, mount_ready)
       update_dom_children(last_props, next_props, mount_ready, context)
 
       # if (!canDefineProperty && this._nodeWithLegacyProperties) {
@@ -139,6 +139,82 @@ module Hyalite
 
     def native_node
       @native_node ||= Mount.node(@root_node_id)
+    end
+
+    def update_dom_properties(last_props, next_props, mount_ready)
+      style_updates = {}
+
+      last_props.each do |prop_key, prop_value|
+        next if next_props.has_key?(prop_key)
+
+        if prop_key == :style
+          @previous_style_copy.each do |style_name, style|
+            style_updates[style_name] = ''
+          end
+
+          @previous_style_copy = nil
+        elsif BrowserEvent.include?(prop_key)
+          if last_props.has_key? prop_key
+            BrowserEvent.delete_listener(root_node_id, prop_key)
+          end
+        elsif DOMProperty.include?(prop_key) || DOMProperty.is_custom_attribute(prop_key)
+          node = Mount.node(root_node_id)
+          DOMPropertyOperations.delete_value_for_property(node, prop_key, prop_value)
+        end
+      end
+
+      next_props.each do |prop_key, next_prop|
+        last_prop = prop_key == :style ? @previous_style_copy : last_props[prop_key]
+        next if next_prop == last_prop
+
+        if prop_key == :style
+          if next_prop
+            next_prop = @previous_style_copy = next_prop.clone
+          else
+            @previous_style_copy = nil
+          end
+
+          if last_prop
+            last_prop.each do |style_name, style|
+              unless next_prop.has_key?(style_name)
+                style_updates[style_name] = ''
+              end
+            end
+
+            next_props.each do |style_name, style|
+              if next_prop.has_key?(style_name) && last_prop[style_name] != next_prop[style_name]
+                style_updates[style_name] = next_prop[style_name]
+              end
+            end
+          else
+            style_updates = next_prop
+          end
+        elsif BrowserEvent.include?(prop_key)
+          if next_prop
+            enqueue_put_listener(root_node_id, prop_key, next_prop, mount_ready)
+          elsif last_prop
+            BrowserEvent.delete_listener(root_node_id, prop_key)
+          end
+        elsif is_custom_component(@tag, next_props)
+          node = Mount.node(root_node_id)
+          DOMPropertyOperations.set_value_for_attribute(node, prop_key, next_prop);
+        elsif DOMProperty.include?(prop_key) || DOMProperty.is_custom_attribute(prop_key)
+          node = Mount.node(root_node_id)
+          if next_prop
+            DOMPropertyOperations.set_value_for_property(node, prop_key, next_prop);
+          else
+            DOMPropertyOperations.delete_value_for_property(node, prop_key)
+          end
+        end
+      end
+
+      if style_updates.any?
+        node = Mount.node(root_node_id)
+        node.style(style_updates)
+      end
+    rescue => e
+        p e
+      raise
     end
 
     def update_dom_children(last_props, next_props, mount_ready, context)

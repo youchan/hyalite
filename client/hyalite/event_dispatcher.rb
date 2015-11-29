@@ -71,6 +71,13 @@ module Hyalite
       @listener_bank[name].try {|bank| bank[id] }
     end
 
+    def delete_listener(id, name)
+      if @listener_bank.has_key? name
+        yield(id, name)
+        @listener_bank[registration_name].delete(id)
+      end
+    end
+
     def delete_all_listeners(id, &block)
       @listener_bank.each do |registration_name, bank|
         next unless bank[id]

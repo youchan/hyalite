@@ -33,7 +33,6 @@ module Hyalite
       challenge: MUST_USE_ATTRIBUTE,
       checked: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
       classID: MUST_USE_ATTRIBUTE,
-      class: MUST_USE_PROPERTY,
       className: MUST_USE_PROPERTY,
       cols: MUST_USE_ATTRIBUTE | HAS_POSITIVE_NUMERIC_VALUE,
       colSpan: nil,
@@ -167,9 +166,10 @@ module Hyalite
       def property_info(name)
         return nil unless PROPERTIES.has_key? name.to_sym
 
-      @property_info ||= {}
-      unless @property_info.has_key? name
-        property = PROPERTIES[name.to_sym]
+        @property_info ||= {}
+        unless @property_info.has_key? name
+          property = PROPERTIES[name.to_sym]
+
           attribute_name = DOM_ATTRIBUTE_NAMES.has_key?(name) ? DOM_ATTRIBUTE_NAMES[name] : name.downcase
 
           @property_info[name] = {
@@ -190,27 +190,29 @@ module Hyalite
         @property_info[name]
       end
 
-      @property_info[name]
-    end
-
-    def default_value_for_property(node_name, prop)
-      node_defaults = default_value_cache[node_name]
-      unless node_defaults
-        default_value_cache[nodeName] = node_defaults = {}
+      def include?(name)
+        PROPERTIES.has_key? name
       end
-      unless node_defaults.include? prop
-        test_element = Document.create(node_name)
-        node_defaults[prop] = test_element[prop]
+
+      def default_value_for_property(node_name, prop)
+        node_defaults = default_value_cache[node_name]
+        unless node_defaults
+          default_value_cache[node_name] = node_defaults = {}
+        end
+        unless node_defaults.include? prop
+          test_element = $document.create_element(node_name)
+          node_defaults[prop] = test_element[prop]
+        end
+        node_defaults[prop]
       end
-      node_defaults[prop]
-    end
 
-    def default_value_cache
-      @default_value_cache ||= {}
-    end
+      def default_value_cache
+        @default_value_cache ||= {}
+      end
 
-    def self.is_custom_attribute(attribute_name)
-      /^(data|aria)-[a-z_][a-z\d_.\-]*$/ =~ attribute_name
+      def is_custom_attribute(attribute_name)
+        /^(data|aria)-[a-z_][a-z\d_.\-]*$/ =~ attribute_name
+      end
     end
   end
 end
