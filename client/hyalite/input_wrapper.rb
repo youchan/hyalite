@@ -20,6 +20,9 @@ module Hyalite
       }
     end
 
+    def unmount_wrapper
+    end
+
     def native_props(inst)
       props = @dom_component.current_element.props
 
