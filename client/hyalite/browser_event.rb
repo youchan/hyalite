@@ -11,6 +11,7 @@ module Hyalite
     TOP_EVENT_MAPPING = {
       topKeyDown: "keydown",
       topChange: "change",
+      topClick: "click",
       topInput: "input",
       topInvalid: "invalid"
     }
