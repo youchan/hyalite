@@ -49,7 +49,7 @@ module Hyalite
       @asap_enqueued = false
       @reconcile_transaction = ReconcileTransaction.new
 
-      @flush_transaction = Transaction.new([NestedUpdate.new(@dirty_components), UpdateQueueing.new(@callback_queue)])
+      @flush_transaction = Transaction.new([NestedUpdate.new(@dirty_components), UpdateQueueing.new(@callback_queue), @reconcile_transaction])
     end
 
     def enqueue_update(component)
@@ -66,6 +66,7 @@ module Hyalite
       already_batching_updates = @is_batching_updates
 
       @is_batching_updates = true
+
 
       if already_batching_updates
         yield

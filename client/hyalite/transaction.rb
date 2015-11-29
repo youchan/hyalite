@@ -18,7 +18,11 @@ class Transaction
   end
 
   def close
-    @close_proc.call
+    if @close_proc
+      @close_proc.call
+    else
+      close_all
+    end
   end
 
   def close_all
