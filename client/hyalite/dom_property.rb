@@ -33,12 +33,8 @@ module Hyalite
       challenge: MUST_USE_ATTRIBUTE,
       checked: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
       classID: MUST_USE_ATTRIBUTE,
-      # To set className on SVG elements, it's necessary to use .setAttribute;
-      # this works on HTML elements too in all browsers except IE8. Conveniently,
-      # IE8 doesn't support SVG and so we can simply use the attribute in
-      # browsers that support SVG and the property in browsers that don't,
-      # regardless of whether the element is HTML or SVG.
       class: MUST_USE_PROPERTY,
+      className: MUST_USE_PROPERTY,
       cols: MUST_USE_ATTRIBUTE | HAS_POSITIVE_NUMERIC_VALUE,
       colSpan: nil,
       content: nil,
@@ -160,26 +156,38 @@ module Hyalite
       unselectable: MUST_USE_ATTRIBUTE,
     }
 
-    def self.property_info(name)
-      return nil unless PROPERTIES.has_key? name.to_sym
+    DOM_ATTRIBUTE_NAMES = {
+      acceptCharset: 'accept-charset',
+      className: 'class',
+      htmlFor: 'for',
+      httpEquiv: 'http-equiv'
+    }
+
+    class << self
+      def property_info(name)
+        return nil unless PROPERTIES.has_key? name.to_sym
 
       @property_info ||= {}
       unless @property_info.has_key? name
         property = PROPERTIES[name.to_sym]
+          attribute_name = DOM_ATTRIBUTE_NAMES.has_key?(name) ? DOM_ATTRIBUTE_NAMES[name] : name.downcase
 
-        @property_info[name] = {
-          attribute_name: name.downcase,
-          attribute_namespace: nil,
-          property_name: name,
-          mutation_method: nil,
-          must_use_attribute: property && property & MUST_USE_ATTRIBUTE > 0,
-          must_use_property: property && property & MUST_USE_PROPERTY > 0,
-          has_side_effects: property && property & HAS_SIDE_EFFECTS > 0,
-          has_boolean_value: property && property & HAS_BOOLEAN_VALUE > 0,
-          has_numeric_value: property && property & HAS_NUMERIC_VALUE > 0,
-          has_positive_numeric_value: property && property & HAS_POSITIVE_NUMERIC_VALUE > 0,
-          has_overloaded_boolean_value: property && property & HAS_OVERLOADED_BOOLEAN_VALUE > 0
-        }
+          @property_info[name] = {
+            attribute_name: attribute_name,
+            attribute_namespace: nil,
+            property_name: name,
+            mutation_method: nil,
+            must_use_attribute: property && property & MUST_USE_ATTRIBUTE > 0,
+            must_use_property: property && property & MUST_USE_PROPERTY > 0,
+            has_side_effects: property && property & HAS_SIDE_EFFECTS > 0,
+            has_boolean_value: property && property & HAS_BOOLEAN_VALUE > 0,
+            has_numeric_value: property && property & HAS_NUMERIC_VALUE > 0,
+            has_positive_numeric_value: property && property & HAS_POSITIVE_NUMERIC_VALUE > 0,
+            has_overloaded_boolean_value: property && property & HAS_OVERLOADED_BOOLEAN_VALUE > 0
+          }
+        end
+
+        @property_info[name]
       end
 
       @property_info[name]
