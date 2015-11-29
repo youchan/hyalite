@@ -77,11 +77,7 @@ module Hyalite
 
     def perform_update_if_necessary(mount_ready)
       if @pending_element
-        receive_component(
-          @pending_element || current_element,
-          mount_ready,
-          @context
-        )
+        receive_component(@pending_element, mount_ready, @context)
       end
 
       if (@pending_state_queue && @pending_state_queue.any?) || @pending_force_update
