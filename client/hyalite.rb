@@ -86,5 +86,13 @@ module Hyalite
         @current_owner
       end
     end
+
+    def find_dom_node(component_or_element)
+      return component_or_element if component_or_element.respond_to?(:node_type) && component_or_element.node_type == Browser::DOM::Node::ELEMENT_NODE
+
+      if instance_map.has_key?(component_or_element)
+        return Mount.node(instance_map[component_or_element].root_node_id)
+      end
+    end
   end
 end
