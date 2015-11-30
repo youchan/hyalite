@@ -43,10 +43,14 @@ module Hyalite
 
     def update_wrapper
       props = @dom_component.current_element.props
-      checked = props[:checked]
-      if checked
+      if props.has_key?(:checked)
+        checked = props[:checked]
         node = Mount.node(@dom_component.root_node_id)
-        node[:checked] = checked
+        if checked
+          node[:checked] = checked
+        else
+          node.remove_attribute(:checked)
+        end
       end
 
       value = LinkedValueUtils.value(props)
