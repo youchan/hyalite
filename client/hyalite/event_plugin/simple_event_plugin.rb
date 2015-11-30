@@ -1,24 +1,254 @@
 module Hyalite
   class SimpleEventPlugin
     EVENT_TYPES = {
+      blur: {
+        phasedRegistrationNames: {
+          bubbled: :onBlur,
+          captured: :onBlurCapture
+        }
+      },
+      click: {
+        phasedRegistrationNames: {
+          bubbled: :onClick,
+          captured: :onClickCapture
+        }
+      },
+      contextMenu: {
+        phasedRegistrationNames: {
+          bubbled: :onContextMenu,
+          captured: :onContextMenuCapture
+        }
+      },
+      copy: {
+        phasedRegistrationNames: {
+          bubbled: :onCopy,
+          captured: :onCopyCapture
+        }
+      },
+      cut: {
+        phasedRegistrationNames: {
+          bubbled: :onCut,
+          captured: :onCutCapture
+        }
+      },
+      doubleClick: {
+        phasedRegistrationNames: {
+          bubbled: :onDoubleClick,
+          captured: :onDoubleClickCapture
+        }
+      },
+      drag: {
+        phasedRegistrationNames: {
+          bubbled: :onDrag,
+          captured: :onDragCapture
+        }
+      },
+      dragEnd: {
+        phasedRegistrationNames: {
+          bubbled: :onDragEnd,
+          captured: :onDragEndCapture
+        }
+      },
+      dragEnter: {
+        phasedRegistrationNames: {
+          bubbled: :onDragEnter,
+          captured: :onDragEnterCapture
+        }
+      },
+      dragExit: {
+        phasedRegistrationNames: {
+          bubbled: :onDragExit,
+          captured: :onDragExitCapture
+        }
+      },
+      dragLeave: {
+        phasedRegistrationNames: {
+          bubbled: :onDragLeave,
+          captured: :onDragLeaveCapture
+        }
+      },
+      dragOver: {
+        phasedRegistrationNames: {
+          bubbled: :onDragOver,
+          captured: :onDragOverCapture
+        }
+      },
+      dragStart: {
+        phasedRegistrationNames: {
+          bubbled: :onDragStart,
+          captured: :onDragStartCapture
+        }
+      },
+      drop: {
+        phasedRegistrationNames: {
+          bubbled: :onDrop,
+          captured: :onDropCapture
+        }
+      },
+      focus: {
+        phasedRegistrationNames: {
+          bubbled: :onFocus,
+          captured: :onFocusCapture
+        }
+      },
+      input: {
+        phasedRegistrationNames: {
+          bubbled: :onInput,
+          captured: :onInputCapture
+        }
+      },
       keyDown: {
         phasedRegistrationNames: {
-          bubbled: "onKeyDown",
-          captured: "onKeyDownCapture"
+          bubbled: :onKeyDown,
+          captured: :onKeyDownCapture
         }
       },
-
-      invalid: {
+      keyPress: {
         phasedRegistrationNames: {
-          bubbled: "onInvalid",
-          captured: "onInvalidCapture"
+          bubbled: :onKeyPress,
+          captured: :onKeyPressCapture
         }
       },
+      keyUp: {
+        phasedRegistrationNames: {
+          bubbled: :onKeyUp,
+          captured: :onKeyUpCapture
+        }
+      },
+      load: {
+        phasedRegistrationNames: {
+          bubbled: :onLoad,
+          captured: :onLoadCapture
+        }
+      },
+      error: {
+        phasedRegistrationNames: {
+          bubbled: :onError,
+          captured: :onErrorCapture
+        }
+      },
+      mouseDown: {
+        phasedRegistrationNames: {
+          bubbled: :onMouseDown,
+          captured: :onMouseDownCapture
+        }
+      },
+      mouseMove: {
+        phasedRegistrationNames: {
+          bubbled: :onMouseMove,
+          captured: :onMouseMoveCapture
+        }
+      },
+      mouseOut: {
+        phasedRegistrationNames: {
+          bubbled: :onMouseOut,
+          captured: :onMouseOutCapture
+        }
+      },
+      mouseOver: {
+        phasedRegistrationNames: {
+          bubbled: :onMouseOver,
+          captured: :onMouseOverCapture
+        }
+      },
+      mouseUp: {
+        phasedRegistrationNames: {
+          bubbled: :onMouseUp,
+          captured: :onMouseUpCapture
+        }
+      },
+      paste: {
+        phasedRegistrationNames: {
+          bubbled: :onPaste,
+          captured: :onPasteCapture
+        }
+      },
+      reset: {
+        phasedRegistrationNames: {
+          bubbled: :onReset,
+          captured: :onResetCapture
+        }
+      },
+      scroll: {
+        phasedRegistrationNames: {
+          bubbled: :onScroll,
+          captured: :onScrollCapture
+        }
+      },
+      submit: {
+        phasedRegistrationNames: {
+          bubbled: :onSubmit,
+          captured: :onSubmitCapture
+        }
+      },
+      touchCancel: {
+        phasedRegistrationNames: {
+          bubbled: :onTouchCancel,
+          captured: :onTouchCancelCapture
+        }
+      },
+      touchEnd: {
+        phasedRegistrationNames: {
+          bubbled: :onTouchEnd,
+          captured: :onTouchEndCapture
+        }
+      },
+      touchMove: {
+        phasedRegistrationNames: {
+          bubbled: :onTouchMove,
+          captured: :onTouchMoveCapture
+        }
+      },
+      touchStart: {
+        phasedRegistrationNames: {
+          bubbled: :onTouchStart,
+          captured: :onTouchStartCapture
+        }
+      },
+      wheel: {
+        phasedRegistrationNames: {
+          bubbled: :onWheel,
+          captured: :onWheelCapture
+        }
+      }
     }
 
     TOP_LEVEL_EVENTS_TO_DISPATCH_CONFIG = {
+      topBlur: EVENT_TYPES[:blur],
+      topClick: EVENT_TYPES[:click],
+      topContextMenu: EVENT_TYPES[:contextMenu],
+      topCopy: EVENT_TYPES[:copy],
+      topCut: EVENT_TYPES[:cut],
+      topDoubleClick: EVENT_TYPES[:doubleClick],
+      topDrag: EVENT_TYPES[:drag],
+      topDragEnd: EVENT_TYPES[:dragEnd],
+      topDragEnter: EVENT_TYPES[:dragEnter],
+      topDragExit: EVENT_TYPES[:dragExit],
+      topDragLeave: EVENT_TYPES[:dragLeave],
+      topDragOver: EVENT_TYPES[:dragOver],
+      topDragStart: EVENT_TYPES[:dragStart],
+      topDrop: EVENT_TYPES[:drop],
+      topError: EVENT_TYPES[:error],
+      topFocus: EVENT_TYPES[:focus],
+      topInput: EVENT_TYPES[:input],
       topKeyDown: EVENT_TYPES[:keyDown],
-      topInvalid: EVENT_TYPES[:invalid]
+      topKeyPress: EVENT_TYPES[:keyPress],
+      topKeyUp: EVENT_TYPES[:keyUp],
+      topLoad: EVENT_TYPES[:load],
+      topMouseDown: EVENT_TYPES[:mouseDown],
+      topMouseMove: EVENT_TYPES[:mouseMove],
+      topMouseOut: EVENT_TYPES[:mouseOut],
+      topMouseOver: EVENT_TYPES[:mouseOver],
+      topMouseUp: EVENT_TYPES[:mouseUp],
+      topPaste: EVENT_TYPES[:paste],
+      topReset: EVENT_TYPES[:reset],
+      topScroll: EVENT_TYPES[:scroll],
+      topSubmit: EVENT_TYPES[:submit],
+      topTouchCancel: EVENT_TYPES[:touchCancel],
+      topTouchEnd: EVENT_TYPES[:touchEnd],
+      topTouchMove: EVENT_TYPES[:touchMove],
+      topTouchStart: EVENT_TYPES[:touchStart],
+      topWheel: EVENT_TYPES[:wheel]
     }
 
     def initialize
