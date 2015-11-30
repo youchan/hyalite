@@ -185,9 +185,9 @@ module Hyalite
               initial_children[update[:parentID]][update[:fromIndex]],
               update[:toIndex])
           when :set_markup
-            update[:parentNode].inner_html = update[:content]
+            update[:parentNode].inner_html = update[:textContent]
           when :text_content
-            update[:parentNode].content = update[:content]
+            update[:parentNode].content = update[:textContent]
           when :remove_node
             # Already removed above.
           end
