@@ -1,6 +1,9 @@
+require 'hyalite/short_hand'
+
 module Hyalite
   module Component
-  attr_accessor :props, :state, :context, :refs
+
+    attr_accessor :props, :state, :context, :refs
 
     def init_component(props, context, updator)
       @props = props
