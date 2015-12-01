@@ -4,7 +4,7 @@ require 'browser/interval'
 class ExampleView
   include Hyalite::Component
 
-  def get_initial_state
+  def initial_state
     @count = 0
     { now: @count }
   end

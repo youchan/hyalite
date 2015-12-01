@@ -9,11 +9,11 @@ module Hyalite
       @props = props
       @context = context
       @updator = updator
-      @state = get_initial_state
+      @state = initial_state
       @refs = nil
     end
 
-    def get_initial_state
+    def initial_state
       {}
     end
 
