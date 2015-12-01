@@ -25,6 +25,10 @@ module Hyalite
         end
       end
 
+      def create_markup_for_styles(element, styles)
+        element.style(styles)
+      end
+
       def create_markup_for_custom_attribute(element, name, value)
         return if (!is_attribute_name_safe(name) || value == null)
 

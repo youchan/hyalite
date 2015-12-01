@@ -181,7 +181,7 @@ module Hyalite
               end
             end
 
-            next_props.each do |style_name, style|
+            next_prop.each do |style_name, style|
               if next_prop.has_key?(style_name) && last_prop[style_name] != next_prop[style_name]
                 style_updates[style_name] = next_prop[style_name]
               end
@@ -259,15 +259,15 @@ module Hyalite
         else
           if prop_key == :style
             if prop_value
-              prop_value = @previous_style_copy = props.style.clone
+              prop_value = @previous_style_copy = props[:style].clone
             end
-            prop_value = DOMPropertyOperations.create_markup_for_styles(prop_value)
-          end
-
-          if is_custom_component(@tag, props)
-            DOMPropertyOperations.create_markup_for_custom_attribute(element, prop_key, prop_value)
+            DOMPropertyOperations.create_markup_for_styles(element, prop_value)
           else
-            DOMPropertyOperations.create_markup_for_property(element, prop_key, prop_value)
+            if is_custom_component(@tag, props)
+              DOMPropertyOperations.create_markup_for_custom_attribute(element, prop_key, prop_value)
+            else
+              DOMPropertyOperations.create_markup_for_property(element, prop_key, prop_value)
+            end
           end
         end
       end
