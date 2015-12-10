@@ -162,7 +162,7 @@ module Hyalite
       end
 
       def delete_listener(id, registration_name)
-        event_dispatcher.delete_listeners(id, registration_name) do |id, registration_name|
+        event_dispatcher.delete_listener(id, registration_name) do |id, registration_name|
           plugin = event_plugin_registry[registration_name]
           if plugin.respond_to? :will_delete_listener
             plugin.will_delete_listener(id, registration_name)

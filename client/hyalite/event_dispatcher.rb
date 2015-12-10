@@ -73,7 +73,7 @@ module Hyalite
 
     def delete_listener(id, registration_name)
       if @listener_bank.has_key? registration_name
-        yield(id, name)
+        yield(id, registration_name)
         @listener_bank[registration_name].delete(id)
       end
     end
