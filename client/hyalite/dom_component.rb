@@ -280,7 +280,14 @@ module Hyalite
 
     def create_content_markup(mount_ready, element, context)
       children = @element.props[:children]
-      if is_text_content(children)
+
+      inner_html = @element.props[:dangerouslySetInnerHTML]
+      if inner_html
+        if inner_html[:__html]
+          html = inner_html[:__html]
+          `element.native.innerHTML = html`
+        end
+      elsif is_text_content(children)
         element.inner_dom = Browser::DOM::Text.create(@element.props[:children])
       else
         mount_images = mount_children(@element.props[:children], mount_ready, context)
