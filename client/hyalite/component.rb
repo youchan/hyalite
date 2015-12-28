@@ -31,6 +31,9 @@ module Hyalite
     def component_will_mount
     end
 
+    def component_did_mount
+    end
+
     def component_will_unmount
     end
 
