@@ -1,7 +1,6 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
+require 'bundler'
+Bundler.require
 
-RSpec::Core::RakeTask.new(:spec)
-
-task :default => :spec
+require 'opal/rspec/rake_task'
+Opal::RSpec::RakeTask.new(:default)
 
