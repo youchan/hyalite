@@ -96,8 +96,9 @@ module Hyalite
     class << self
       def wrap_update(&block)
         self.update_depth += 1
-        error_thrown = false
+        error_thrown = true
         yield
+        error_thrown = false
       ensure
         self.update_depth -= 1
         if self.update_depth == 0
