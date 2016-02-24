@@ -211,7 +211,7 @@ module Hyalite
       end
 
       def is_custom_attribute(attribute_name)
-        /^(data|aria)-[a-z_][a-z\d_.\-]*$/ =~ attribute_name
+        !!(/^(data|aria)-[a-z_][a-z\d_.\-]*$/ =~ attribute_name)
       end
     end
   end
