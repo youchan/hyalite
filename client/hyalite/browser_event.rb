@@ -1,5 +1,4 @@
 require 'set'
-require 'math'
 require 'hyalite/event_dispatcher'
 require 'hyalite/synthetic_event'
 require 'hyalite/event_plugin/event_plugin_registry'
@@ -48,7 +47,7 @@ module Hyalite
       topWheel: 'wheel'
     }
 
-    TOP_LISTENERS_ID_KEY = '_hyliteListenersID' + Math.rand.to_s.chars.drop(2).join
+    TOP_LISTENERS_ID_KEY = '_hyliteListenersID' + rand.to_s.chars.drop(2).join
 
     class << self
       def enabled?
