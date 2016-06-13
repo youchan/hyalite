@@ -30,6 +30,16 @@ module Hyalite
         enqueue_update(internal_instance);
       end
 
+      def enqueue_force_update(public_instance)
+        internal_instance = Hyalite.instance_map[public_instance]
+
+        return unless internal_instance
+
+        internal_instance.pending_force_update = true
+
+        enqueue_update(internal_instance)
+      end
+
       def enqueue_update(internal_instance)
         Hyalite.updates.enqueue_update(internal_instance)
       end

@@ -47,6 +47,13 @@ module Hyalite
       true
     end
 
+    def force_update(&block)
+      @updator.enqueue_force_update(self);
+      if block_given?
+        @updator.enqueue_callback(self, &block)
+      end
+    end
+
     def set_state(states, &block)
       @updator.enqueue_set_state(self, states)
       if block_given?

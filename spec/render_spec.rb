@@ -29,4 +29,32 @@ describe 'render' do
     expect(component.refs[:comp]).to be_a(Browser::DOM::Element)
     expect(component.refs[:comp].class_name).to be('target')
   end
+
+  it 'render update cascaded objcect' do
+    class ForceUpdateComponent
+      include Hyalite::Component
+
+      def initialize
+        @value =  { cascaded: 'initial' }
+      end
+
+      def initial_state
+        { value: @value }
+      end
+
+      def update_cascaded_object
+        @value[:cascaded] = 'updated'
+        force_update
+      end
+
+      def render
+        Hyalite.create_element('div', {ref: 'target'}, @value[:cascaded])
+      end
+    end
+
+    component = Hyalite.render(Hyalite.create_element(ForceUpdateComponent), DOM('<div/>'))
+    component.update_cascaded_object
+
+    expect(component.refs[:target].inner_text).to be('updated')
+  end
 end
