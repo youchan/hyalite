@@ -20,4 +20,13 @@ describe 'render' do
     expect(parent.child).to be_a(Browser::DOM::Element)
     expect(parent.child.class_name).to be('child')
   end
+
+  it 'referrence instance' do
+    component = render do
+      Hyalite.create_element('div', {className: 'target', ref: 'comp'})
+    end
+
+    expect(component.refs[:comp]).to be_a(Browser::DOM::Element)
+    expect(component.refs[:comp].class_name).to be('target')
+  end
 end
