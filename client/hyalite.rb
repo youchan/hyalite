@@ -40,6 +40,25 @@ module Hyalite
       ElementObject.new(type, key, ref, Hyalite.current_owner, props)
     end
 
+    def fn(&block)
+      Class.new {
+        include Component
+        include Component::ShortHand
+
+        def self.render_proc=(proc)
+          @render_proc = proc
+        end
+
+        def self.render_proc
+          @render_proc
+        end
+
+        def render
+          self.instance_exec(@props, &self.class.render_proc)
+        end
+      }.tap{|cl| cl.render_proc = block }
+    end
+
     def instantiate_component(node)
       node = EmptyComponent.empty_element if node.nil?
 

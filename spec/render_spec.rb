@@ -57,4 +57,14 @@ describe 'render' do
 
     expect(component.refs[:target].inner_text).to be('updated')
   end
+
+  it 'render function as Component' do
+    FunctionComponent =  Hyalite.fn {|prrops| div({className: 'actual'}, props[:value]) }
+    render do
+      FunctionComponent.el(value: 'value')
+    end
+
+    expect($document['.actual']).to be_a(Browser::DOM::Element)
+    expect($document['.actual'].text).to be('value')
+  end
 end
