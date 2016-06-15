@@ -3,6 +3,7 @@ require 'hyalite'
 module RenderingHelper
   def self.included(mod)
     mod.before do
+      $document.body.clear
       @mount_at = DOM("<div class='root'></div>")
       @mount_at.append_to($document.body)
     end
