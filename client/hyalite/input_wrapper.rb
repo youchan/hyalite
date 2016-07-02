@@ -26,11 +26,16 @@ module Hyalite
     def native_props(inst)
       props = @dom_component.current_element.props
 
+      if props[:checked] || @wrapper_state[:initialChecked]
+        props = props.merge({
+          checked: props[:checked] || @wrapper_state[:initialChecked],
+        })
+      end
+
       props.merge({
         defaultChecked: nil,
         defaultValue: nil,
         value: props[:value] || @wrapper_state[:initialValue],
-        checked: props[:checked] || @wrapper_state[:initialChecked],
         onChange: @wrapper_state[:onChange],
       })
     end
