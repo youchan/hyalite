@@ -200,7 +200,7 @@ module Hyalite
         if index >= parent_node.children.to_ary.length
           parent_node.add_child(child_node)
         else
-          parent_node[index].add_previous_sibling(child_node)
+          parent_node.children.to_ary[index].add_previous_sibling(child_node)
         end
       end
     end
