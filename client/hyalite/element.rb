@@ -11,7 +11,7 @@ module Hyalite
     end
 
     def inspect
-      "<#{type} #{props.inspect} />"
+      "<#{type} #{props && props.inspect} />"
     end
   end
 end
