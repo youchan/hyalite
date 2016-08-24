@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hyalite (0.0.1)
+    hyalite (0.0.2)
       opal
       opal-browser
 
@@ -39,4 +39,4 @@ DEPENDENCIES
   rake (~> 10.0)
 
 BUNDLED WITH
-   1.12.4
+   1.12.5

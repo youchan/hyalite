@@ -1,6 +1,10 @@
 require 'bundler'
 Bundler.require
 
+require "bundler/gem_tasks"
+
+task :default => :spec
+
 Opal::Processor.source_map_enabled = true
 
 require 'opal/rspec/rake_task'
