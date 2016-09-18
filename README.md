@@ -2,6 +2,8 @@ Hyalite
 ====
 
 [![Build Status](https://travis-ci.org/youchan/hyalite.svg?branch=master)](https://travis-ci.org/youchan/hyalite)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/youchan/hyalite?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 
 This is ruby virtual DOM implementation using opal. It is inspired by react.js.
 
