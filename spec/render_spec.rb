@@ -67,4 +67,27 @@ describe 'render' do
     expect($document['.actual']).to be_a(Browser::DOM::Element)
     expect($document['.actual'].text).to be('value')
   end
+
+  it 'update class name' do
+    class UpdateClassNameComponent
+      include Hyalite::Component
+      include Hyalite::Component::ShortHand
+
+      state :class_name, 'default'
+
+      def update_class_name
+        @state.class_name = 'updated'
+      end
+
+      def render
+        div({ref: 'target', class: @state.class_name})
+      end
+    end
+
+    component = Hyalite.render(Hyalite.create_element(UpdateClassNameComponent), DOM('<div/>'))
+
+    component.update_class_name
+
+    expect(component.refs[:target]['class']).to be('updated')
+  end
 end

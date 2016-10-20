@@ -18,5 +18,12 @@ module RenderingHelper
 
     Hyalite.render(Hyalite.create_element(TestComponent), @mount_at)
   end
+
+  def trace_element(element, depth = 0)
+    children = element.children.select(&:elem?).map{|c| trace_element(c, depth + 1) } * ''
+    text = element.children.select(&:text?).map(&:text) * ' '
+    cls = element.attributes['class'] || ''
+    (' ' * depth) + "#{element.name.downcase}#{cls ? '.' + cls : ''} #{text}\n#{children}"
+  end
 end
 
