@@ -34,7 +34,7 @@ module Hyalite
       checked: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
       classID: MUST_USE_ATTRIBUTE,
       className: MUST_USE_PROPERTY,
-      class: MUST_USE_PROPERTY,
+      class: MUST_USE_ATTRIBUTE,
       cols: MUST_USE_ATTRIBUTE | HAS_POSITIVE_NUMERIC_VALUE,
       colSpan: nil,
       content: nil,
