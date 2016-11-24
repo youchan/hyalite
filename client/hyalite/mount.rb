@@ -218,7 +218,7 @@ module Hyalite
           end
         end
 
-        raise "can't find component_root"
+        raise "can't find component_root ancestor_node: #{ancestor_node}, target_id: #{target_id}"
       end
 
       def find_deepest_cached_ancestor(target_id)
