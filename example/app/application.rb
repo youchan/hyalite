@@ -4,21 +4,18 @@ require 'browser/interval'
 class ExampleView
   include Hyalite::Component
 
-  def initial_state
-    @count = 0
-    { now: @count }
-  end
+  state :count, 0
 
   def component_did_mount
     every(5) do
-      set_state({ now: @count += 1 })
+      @state.count += 1
     end
   end
 
   def render
     Hyalite.create_element("div", {class: 'example'},
       Hyalite.create_element("h2", nil, @props[:title]),
-      Hyalite.create_element("h3", nil, "count = #{@state[:now]}"))
+      Hyalite.create_element("h3", nil, "count = #{@state.count}"))
   end
 end
 
