@@ -2,6 +2,7 @@ require 'hyalite/short_hand'
 
 module Hyalite
   module Component
+    include ShortHand
 
     attr_accessor :props, :context, :refs
 

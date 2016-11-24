@@ -13,9 +13,10 @@ class ExampleView
   end
 
   def render
-    Hyalite.create_element("div", {class: 'example'},
-      Hyalite.create_element("h2", nil, @props[:title]),
-      Hyalite.create_element("h3", nil, "count = #{@state.count}"))
+    div({class: 'example'},
+      h2(nil, @props[:title]),
+      h3(nil, "count = #{@state.count}")
+    )
   end
 end
 
