@@ -24,6 +24,10 @@ module Hyalite
           Hyalite.create_element(self, props, *children)
         end
       end
+
+      def pp(obj)
+        puts obj.inspect
+      end
     end
   end
 end
