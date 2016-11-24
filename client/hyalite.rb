@@ -1,5 +1,6 @@
 require 'opal'
 require 'browser'
+require 'hyalite/logger'
 require 'hyalite/transaction'
 require 'hyalite/adler32'
 require 'hyalite/mount'
