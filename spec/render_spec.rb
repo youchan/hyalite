@@ -71,7 +71,6 @@ describe 'render' do
   it 'update class name' do
     class UpdateClassNameComponent
       include Hyalite::Component
-      include Hyalite::Component::ShortHand
 
       state :class_name, 'default'
 
