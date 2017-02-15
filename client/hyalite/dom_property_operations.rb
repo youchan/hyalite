@@ -13,15 +13,15 @@ module Hyalite
 
           attribute_name = property_info[:attribute_name]
           if property_info[:has_boolean_value] || property_info[:has_overloaded_boolean_value] && value == true
-            element[attribute_name] = ""
+            element.attributes[attribute_name] = ""
             return
           end
 
-          element[attribute_name]=Hyalite.escape_text_content_for_browser(value)
+          element.attributes[attribute_name]=Hyalite.escape_text_content_for_browser(value)
         elsif DOMProperty.is_custom_attribute(name)
           return if value.nil?
 
-          element[name]=Hyalite.escape_text_content_for_browser(value)
+          element.attributes[name]=Hyalite.escape_text_content_for_browser(value)
         end
       end
 
@@ -32,7 +32,7 @@ module Hyalite
       def create_markup_for_custom_attribute(element, name, value)
         return if (!is_attribute_name_safe(name) || value == null)
 
-        element[name]=Hyalite.escape_text_content_for_browser(value)
+        element.attributes[name]=Hyalite.escape_text_content_for_browser(value)
       end
 
       def is_attribute_name_safe(attribute_name)
@@ -63,12 +63,12 @@ module Hyalite
             attribute_name = property_info[:attribute_name]
             namespace = property_info[:attribute_namespace]
             if namespace
-              node[attribute_name, {namespace: namespace}] = value.to_s
+              node.attributes[attribute_name, {namespace: namespace}] = value.to_s
             elsif property_info[:has_boolean_value] ||
                  (property_info[:has_overloaded_boolean_value] && value == true)
-              node[attribute_name] = ''
+              node.attributes[attribute_name] = ''
             else
-              node[attribute_name] = value.to_s
+              node.attributes[attribute_name] = value.to_s
             end
           else
             prop_name = property_info[:property_name]
@@ -102,7 +102,7 @@ module Hyalite
       end
 
       def set_attribute_for_id(node, id)
-        node[DOMProperty::ID_ATTRIBUTE_NAME] = id
+        node.attributes[DOMProperty::ID_ATTRIBUTE_NAME] = id
       end
 
       def should_ignore_value(property_info, value)

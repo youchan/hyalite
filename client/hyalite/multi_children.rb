@@ -1,7 +1,7 @@
 module Hyalite
   module MultiChildren
     def mount_children(nested_children, mount_ready, context)
-      children = instantiate_children(nested_children, mount_ready, context)
+      children = instantiate_children(nested_children, context)
       @rendered_children = children
       index = 0
       children.keys.map do |name|
@@ -86,7 +86,7 @@ module Hyalite
 
     def instantiate_children(nested_child_nodes, context)
       Reconciler.flatten_children(nested_child_nodes).map {|name, child|
-        child_instance = Hyalite.instantiate_component(child, nil)
+        child_instance = Hyalite.instantiate_component(child)
         [name, child_instance]
       }.to_h
     end
@@ -188,7 +188,7 @@ module Hyalite
           when :set_markup
             update[:parentNode].inner_html = update[:textContent]
           when :text_content
-            update[:parentNode].content = update[:textContent]
+            update[:parentNode].text = update[:textContent]
           when :remove_node
             # Already removed above.
           end

@@ -3,15 +3,14 @@ require 'spec_helper'
 describe 'state' do
   include RenderingHelper
 
-  it 'state definition' do
+  it 'defined by DSL' do
     class StateDefinition
       include Hyalite::Component
 
       state :test, ''
 
       def update_state
-        # @state.test = 'test'
-        set_state(test:'test')
+        @state.test = 'test'
       end
 
       def render
@@ -19,7 +18,7 @@ describe 'state' do
       end
     end
 
-    component = Hyalite.render(Hyalite.create_element(StateDefinition), DOM('<div/>'))
+    component = Hyalite.render(Hyalite.create_element(StateDefinition), Hyalite::DOM::Element.create('div'))
     component.update_state
 
     actual = component.refs['actual']

@@ -1,9 +1,3 @@
-class Browser::DOM::Element
-  def input_type
-    `self.native.type`
-  end
-end
-
 module Hyalite
   class ChangeEventPlugin
     EVENT_TYPES = {

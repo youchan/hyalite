@@ -15,8 +15,8 @@ describe 'props' do
       Hyalite.create_element(WithProps, {text: 'abc'})
     end
 
-    actual = $document['.actual']
-    expect(actual).to be_a(Browser::DOM::Element)
+    actual = $document['.actual'].first
+    expect(actual).to be_a(Hyalite::DOM::Element)
     expect(actual.text).to be('abc')
   end
 
@@ -32,7 +32,7 @@ describe 'props' do
       Hyalite.create_element(WithProps, {'attr': 'abc'})
     end
 
-    actual = $document['.abc']
-    expect(actual).to be_a(Browser::DOM::Element)
+    actual = $document['.abc'].first
+    expect(actual).to be_a(Hyalite::DOM::Element)
   end
 end

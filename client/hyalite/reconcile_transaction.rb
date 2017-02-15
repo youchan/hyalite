@@ -1,4 +1,5 @@
 require 'hyalite/transaction'
+require 'hyalite/browser_event'
 
 module Hyalite
   class ReconcileTransaction < Transaction

@@ -1,11 +1,12 @@
 require 'hyalite'
+require 'native'
 
 module RenderingHelper
   def self.included(mod)
     mod.before do
       $document.body.clear
-      @mount_at = DOM("<div class='root'></div>")
-      @mount_at.append_to($document.body)
+      @mount_at = Hyalite::DOM::Element.create('div').add_class('root')
+      $document.body << @mount_at
     end
   end
 

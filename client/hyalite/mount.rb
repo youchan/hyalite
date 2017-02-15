@@ -32,7 +32,6 @@ module Hyalite
             return update_root_component(
               prev_component,
               next_wrapped_element,
-              container,
               &block
             ).rendered_component.public_instance
           else
@@ -61,14 +60,14 @@ module Hyalite
       end
 
       def is_rendered(node)
-        return false if node.node_type != Browser::DOM::Node::ELEMENT_NODE
+        return false unless node.element?
 
         id = node_id(node)
         id ? id[0] == SEPARATOR : false
       end
 
       def render_new_root_component(next_element, container, should_reuse_markup, context)
-        component_instance = Hyalite.instantiate_component(next_element, nil)
+        component_instance = Hyalite.instantiate_component(next_element)
         root_id = register_component(component_instance, container)
 
         Hyalite.updates.batched_updates do
@@ -112,23 +111,23 @@ module Hyalite
         if should_reuse_markup
           root_element = root_element_in_container(container)
           checksum = Adler32.checksum markup
-          checksum_attr = root_element.attr(CHECKSUM_ATTR_NAME)
+          checksum_attr = root_element.attributes[CHECKSUM_ATTR_NAME]
           if checksum == checksum_attr
             return
           end
 
-          root_element.remove_attr(CHECKSUM_ATTR_NAME)
-          root_element.attr(CHECKSUM_ATTR_NAME, checksum)
+          root_element.attributes.remove(CHECKSUM_ATTR_NAME)
+          root_element.attributes[CHECKSUM_ATTR_NAME] = checksum
         end
 
         container.inner_dom = markup
       end
 
       def root_element_in_container(container)
-        if container.node_type == Browser::DOM::Node::DOCUMENT_NODE
+        if container.document?
           $document
         else
-          container.child
+          container.children.first
         end
       end
 
@@ -163,8 +162,8 @@ module Hyalite
       end
 
       def internal_id(node)
-        if node.node_type == Browser::DOM::Node::ELEMENT_NODE
-          node.attr(ID_ATTR_NAME)
+        if node.element?
+          node.attributes[ID_ATTR_NAME]
         end
       end
 
@@ -197,7 +196,7 @@ module Hyalite
       def find_component_root(ancestor_node, target_id)
         deepest_ancestor = find_deepest_cached_ancestor(target_id) || ancestor_node
 
-        first_children = [ deepest_ancestor.child ]
+        first_children = [ deepest_ancestor.children.first ]
 
         while first_children.length > 0
           child = first_children.shift
@@ -208,10 +207,10 @@ module Hyalite
               if target_id == child_id
                 return child
               elsif InstanceHandles.is_ancestor_id_of(child_id, target_id)
-                first_children = [ child.child ]
+                first_children = [ child.children.first ]
               end
             else
-              first_children.push(child.child)
+              first_children.push(child.children.first)
             end
 
             child = child.next_sibling
@@ -241,7 +240,7 @@ module Hyalite
           false
         when outer_node == inner_node
           true
-        when outer_node.node_type == Browser::DOM::Node::TEXT_NODE
+        when outer_node.text?
           false
         else
           contains_node(outer_node, inner_node.parent)
@@ -250,7 +249,7 @@ module Hyalite
 
       def find_first_hyalite_dom(node)
         while node && node.parent != node
-          unless node.node_type == Browser::DOM::Node::ELEMENT_NODE && node_id = internal_id(node)
+          unless node.element? && node_id = internal_id(node)
             node = node.parent
             next
           end
@@ -272,7 +271,7 @@ module Hyalite
         nil
       end
 
-      def update_root_component(prev_component, next_element, container, &callback)
+      def update_root_component(prev_component, next_element, &callback)
         UpdateQueue.enqueue_element_internal(prev_component, next_element)
         if block_given?
           UpdateQueue.enqueue_callback_internal(prev_component, &callback)

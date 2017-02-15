@@ -1,7 +1,6 @@
 require 'hyalite/multi_children'
 require 'hyalite/dom_property_operations'
 require 'hyalite/internal_component'
-require 'hyalite/browser_event'
 require 'hyalite/input_wrapper'
 
 module Hyalite
@@ -51,8 +50,8 @@ module Hyalite
       #   transaction.getReactMountReady().enqueue(trapBubbledEventsLocal, this);
       end
 
-      element = create_open_tag_markup_and_put_listeners(mount_ready, @element.props)
-      create_content_markup(mount_ready, element, context)
+      markup = create_open_tag_markup_and_put_listeners(mount_ready, @element.props)
+      create_content_markup(mount_ready, markup, context)
     end
 
     def unmount_component
@@ -274,38 +273,37 @@ module Hyalite
 
       #return element if mount_ready.render_to_static_markup
 
-      element[Mount::ID_ATTR_NAME] = @root_node_id
+      element.attributes[Mount::ID_ATTR_NAME] = @root_node_id
       element
     end
 
-    def create_content_markup(mount_ready, element, context)
+    def create_content_markup(mount_ready, markup, context)
       children = @element.props[:children]
 
       inner_html = @element.props[:dangerouslySetInnerHTML]
       if inner_html
-        if inner_html[:__html]
-          html = inner_html[:__html]
-          `element.native.innerHTML = html`
+        if inner_html.has_key?(:__html)
+          markup.inner_html = inner_html[:__html]
         end
       elsif is_text_content(children)
-        element.inner_dom = Browser::DOM::Text.create(@element.props[:children])
+        markup.text = children.to_s
       else
-        mount_images = mount_children(@element.props[:children], mount_ready, context)
-        mount_images.each do |image|
-          if image.is_a?(String)
-            element.text = image
+        mount_images = mount_children(children, mount_ready, context)
+        mount_images.compact.each do |image|
+          if is_text_content(image)
+            markup << Hyalite::DOM::Text.new(image.to_s)
           else
-            image.append_to(element) if image
+            markup << image
           end
         end
       end
-      element
+      markup
     end
 
     def enqueue_put_listener(id, event_name, listener, mount_ready)
       container = Mount.container_for_id(id)
       if container
-        doc = container.node_type == Browser::DOM::Node::ELEMENT_NODE ? container.document : container
+        doc = container.element? ? container.document : container
         BrowserEvent.listen_to(event_name, doc)
       end
       mount_ready.enqueue do

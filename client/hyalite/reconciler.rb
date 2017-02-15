@@ -53,7 +53,7 @@ module Hyalite
               unmount_component(prev_child, name)
             end
 
-            next_children[name] = Hyalite.instantiate_component(next_element, nil)
+            next_children[name] = Hyalite.instantiate_component(next_element)
           end
         end
 

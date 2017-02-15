@@ -1,5 +1,4 @@
 require 'opal'
-require 'browser'
 require 'hyalite/logger'
 require 'hyalite/transaction'
 require 'hyalite/adler32'
@@ -7,6 +6,7 @@ require 'hyalite/mount'
 require 'hyalite/element'
 require 'hyalite/dom_component'
 require 'hyalite/text_component'
+require 'hyalite/dom'
 
 module Hyalite
   class << self
@@ -108,7 +108,7 @@ module Hyalite
     end
 
     def find_dom_node(component_or_element)
-      return component_or_element if component_or_element.respond_to?(:node_type) && component_or_element.node_type == Browser::DOM::Node::ELEMENT_NODE
+      return component_or_element if component_or_element.respond_to?(:node_type) && component_or_element.element?
 
       if instance_map.has_key?(component_or_element)
         return Mount.node(instance_map[component_or_element].root_node_id)
