@@ -31,7 +31,7 @@ DEPENDENCIES
   bundler (~> 1.8)
   hyalite!
   opal-rspec
-  rake (~> 10.0)
+  rake
 
 BUNDLED WITH
    1.13.6
