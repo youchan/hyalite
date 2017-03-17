@@ -16,6 +16,10 @@ module Hyalite::DOM
       `self.native.type`
     end
 
+    def [](prop_name)
+      `self.native[#{prop_name}]`
+    end
+
     def add_class(name)
       `self.native.classList.add(name)`
       self

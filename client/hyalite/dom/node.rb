@@ -23,6 +23,10 @@ module Hyalite::DOM
       false
     end
 
+    def node_name
+      `self.native.tagName`
+    end
+
     def <<(child)
       `self.native.appendChild(child.native)`
     end
@@ -44,6 +48,15 @@ module Hyalite::DOM
 
     def children
       Collection.new `self.native.childNodes`
+    end
+
+    def next_sibling
+      sib = `self.native.nextSibling`
+      Node.create(sib) if sib
+    end
+
+    def on(event, &block)
+      `self.native.addEventListener(event, block)`
     end
   end
 end

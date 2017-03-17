@@ -15,6 +15,10 @@ module Hyalite::DOM
       Body.new `self.native.body`
     end
 
+    def ready(&block)
+      `self.native.addEventListener('DOMContentLoaded', block)`
+    end
+
     def self.singleton
       @singleton ||= self.new(`window.document`)
     end
@@ -31,7 +35,7 @@ module Hyalite::DOM
           elements.$push(nodeList.item(i));
         }
       )
-      elements.map{|el| Element.new(el) }
+      elements.map!{|el| Element.new(el) }
     end
   end
 end
