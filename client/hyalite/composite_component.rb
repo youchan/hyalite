@@ -25,9 +25,8 @@ module Hyalite
       @mount_order = CompositeComponent.next_mount_id
       @root_node_id = root_id
 
-      public_context = mask_context(@context)
       @instance = @current_element.type.new
-      @instance.init_component(@current_element.props, public_context, UpdateQueue)
+      @instance.init_component(@current_element.props, @context, UpdateQueue)
 
       Hyalite.instance_map[@instance] = self
 
@@ -111,12 +110,8 @@ module Hyalite
       end
     end
 
-    def mask_context(context)
-      context.select {|k, v| @current_element.type.context_types.has_key? k }
-    end
-
     def update_component(mount_ready, prev_parent_element, next_parent_element, prev_unmasked_context, next_unmasked_context)
-      next_context = (@context == next_unmasked_context ? @instance.context : mask_context(next_unmasked_context))
+      next_context = @context == next_unmasked_context ? @instance.context : next_unmasked_context
 
       next_props = next_parent_element.props
       next_state = process_pending_state(next_props, next_context)

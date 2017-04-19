@@ -60,10 +60,6 @@ module Hyalite
       @state.set(state)
     end
 
-    def context_types
-      {}
-    end
-
     def child_context
       {}
     end
