@@ -87,7 +87,7 @@ module Hyalite
     end
 
     def render(next_element, container, &block)
-      Mount.render_subtree_into_container(nil, next_element, container, &block);
+      Mount.render_subtree_into_container(next_element, container, &block);
     end
 
     def instance_map

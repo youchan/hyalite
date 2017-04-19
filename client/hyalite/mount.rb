@@ -22,7 +22,7 @@ module Hyalite
         @instances_by_root_id[root_id]
       end
 
-      def render_subtree_into_container(parent_component, next_element, container, &block)
+      def render_subtree_into_container(next_element, container, &block)
         next_wrapped_element = ElementObject.new(TopLevelWrapper, nil, nil, nil, next_element)
         prev_component = @instances_by_root_id[root_id(container)]
         if prev_component
@@ -46,10 +46,7 @@ module Hyalite
         component = render_new_root_component(
           next_wrapped_element,
           container,
-          should_reuse_markup,
-          parent_component ?
-            parent_component.internal_instance.process_child_context(parent_component.internal_instance.context) :
-            {}
+          should_reuse_markup
         ).rendered_component.public_instance
 
         if block_given?
@@ -66,12 +63,12 @@ module Hyalite
         id ? id[0] == SEPARATOR : false
       end
 
-      def render_new_root_component(next_element, container, should_reuse_markup, context)
+      def render_new_root_component(next_element, container, should_reuse_markup)
         component_instance = Hyalite.instantiate_component(next_element)
         root_id = register_component(component_instance, container)
 
         Hyalite.updates.batched_updates do
-          mount_component_into_node(component_instance, root_id, container, should_reuse_markup, context)
+          mount_component_into_node(component_instance, root_id, container, should_reuse_markup)
         end
 
         component_instance
@@ -99,9 +96,9 @@ module Hyalite
         root_id
       end
 
-      def mount_component_into_node(component_instance, root_id, container, should_reuse_markup, context)
+      def mount_component_into_node(component_instance, root_id, container, should_reuse_markup)
         Hyalite.updates.reconcile_transaction.perform do |transaction|
-          markup = Reconciler.mount_component(component_instance, root_id, transaction.mount_ready, context)
+          markup = Reconciler.mount_component(component_instance, root_id, transaction.mount_ready, {})
           component_instance.rendered_component.top_level_wrapper = component_instance
           mount_image_into_node(markup, container, should_reuse_markup)
         end
