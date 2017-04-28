@@ -245,7 +245,7 @@ module Hyalite
       end
 
       def find_first_hyalite_dom(node)
-        while node && node.parent != node
+        while node && node.parent
           unless node.element? && node_id = internal_id(node)
             node = node.parent
             next

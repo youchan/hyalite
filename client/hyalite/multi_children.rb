@@ -152,7 +152,7 @@ module Hyalite
         updates.each_with_index do |update, updated_index|
           if update[:type] == :move_existing || update[:type] == :remove_node
             updated_index = update[:fromIndex]
-            updated_child = update[:parentNode].elements[updated_index]
+            updated_child = update[:parentNode].children[updated_index]
             parent_id = update[:parentID]
 
             initial_children[parent_id] ||= []
@@ -195,12 +195,11 @@ module Hyalite
         end
       end
 
-
       def insert_child_at(parent_node, child_node, index)
-        if index >= parent_node.children.to_ary.length
+        if index >= parent_node.children.length
           parent_node.add_child(child_node)
         else
-          parent_node.children.to_ary[index].add_previous_sibling(child_node)
+          parent_node.children[index].add_previous_sibling(child_node)
         end
       end
     end
