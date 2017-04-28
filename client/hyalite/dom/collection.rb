@@ -12,5 +12,13 @@ module Hyalite::DOM
 
       nil
     end
+
+    def [](index)
+      Element.new(`self.native.item(index)`)
+    end
+
+    def length
+      `self.native.length`
+    end
   end
 end
