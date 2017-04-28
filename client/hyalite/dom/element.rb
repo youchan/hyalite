@@ -26,7 +26,7 @@ module Hyalite::DOM
     end
 
     def class_names
-      Array.new `self.native.classList`
+      Array.new(`self.native.classList`).to_a
     end
 
     def attributes
@@ -41,10 +41,18 @@ module Hyalite::DOM
       `self.native.textContent = text`
     end
 
+    def value
+      `self.native.value`
+    end
+
     def style(hash)
       hash.each do |key, value|
         `self.native.style[key] = value`
       end
+    end
+
+    def add_child(child)
+      `self.native.appendChild(child.native)`
     end
 
     def inner_html
@@ -65,7 +73,7 @@ module Hyalite::DOM
     end
 
     def to_s
-      `self.native.toString()`
+      "<#{`self.native.tagName`} class='#{self.class_names.join(' ')}' id='#{self['id']}'/>"
     end
 
     def self.create(tag)

@@ -50,13 +50,22 @@ module Hyalite::DOM
       Collection.new `self.native.childNodes`
     end
 
+    def remove
+      `self.native.remove()`
+    end
+
     def next_sibling
       sib = `self.native.nextSibling`
       Node.create(sib) if sib
     end
 
     def on(event, &block)
-      `self.native.addEventListener(event, block)`
+      callback = Proc.new{|event| block.call(Event.create(event))}
+      `self.native.addEventListener(event, callback)`
+    end
+
+    def ==(other)
+      `self.native === other.native`
     end
   end
 end

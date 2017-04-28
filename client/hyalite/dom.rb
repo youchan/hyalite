@@ -4,6 +4,9 @@ module Hyalite
 end
 
 require 'native'
+require_relative 'dom/event/keyboard_event'
+require_relative 'dom/event/mouse_event'
+require_relative 'dom/event'
 require_relative 'dom/node'
 require_relative 'dom/collection'
 require_relative 'dom/text'
