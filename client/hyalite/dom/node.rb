@@ -59,9 +59,9 @@ module Hyalite::DOM
       Node.create(sib) if sib
     end
 
-    def on(event, &block)
+    def on(name, &block)
       callback = Proc.new{|event| block.call(Event.create(event))}
-      `self.native.addEventListener(event, callback)`
+      `self.native.addEventListener(name, callback)`
     end
 
     def ==(other)
