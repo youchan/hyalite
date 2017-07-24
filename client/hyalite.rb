@@ -87,7 +87,12 @@ module Hyalite
     end
 
     def render(next_element, container, &block)
-      Mount.render_subtree_into_container(next_element, container, &block);
+      case container
+      when DOM::Node
+        Mount.render_subtree_into_container(next_element, container, &block)
+      when Enumerable
+        container.each {|node| render(next_element, node, &block) }
+      end
     end
 
     def instance_map

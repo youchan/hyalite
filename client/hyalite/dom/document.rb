@@ -28,14 +28,7 @@ module Hyalite::DOM
     end
 
     def [](q)
-      elements = []
-      %x(
-        var nodeList = self.native.querySelectorAll(#{q});
-        for (var i = 0; i < nodeList.length; i++) {
-          elements.$push(nodeList.item(i));
-        }
-      )
-      elements.map!{|el| Element.new(el) }
+      Collection.new `self.native.querySelectorAll(#{q})`
     end
   end
 end
