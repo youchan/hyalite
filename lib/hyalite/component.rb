@@ -34,12 +34,25 @@ module Hyalite
       end
 
       TAGS.each do |tag|
-        define_method(tag) do |props, *children|
+        define_method(tag) do |props, *children, &block|
+          children << ChildrenRenderer.new.instance_eval(&block) if block
           Hyalite.create_element(tag, props, *children)
         end
       end
 
       klass.extend ClassMethods
+    end
+
+    class ChildrenRenderer
+      def initialize
+        @children = []
+        TAGS.each do |tag|
+          define_singleton_method(tag) do |props, *children, &block|
+            @children << Hyalite.create_element(tag, props, *children)
+            @children
+          end
+        end
+      end
     end
 
     module ClassMethods

@@ -146,7 +146,9 @@ module Hyalite
             #   is_listening[:top_blur] = true
             #   is_listening[:top_focus] = true
             else
+              puts ">>>>> dependency #{dependency}"
               if TOP_EVENT_MAPPING.has_key? dependency
+                puts ">>>> trap_bubbled_event"
                 trap_bubbled_event(dependency, TOP_EVENT_MAPPING[dependency], mount_at)
               end
             end

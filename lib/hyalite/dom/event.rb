@@ -2,8 +2,32 @@ module Hyalite
   module DOM
     module Event
       EVENT_CLASSES = {
+        # MouseEvent
         'click' => MouseEvent,
-        'keydown' => KeyboardEvent
+        'dblclick' => MouseEvent,
+        'mousedown' => MouseEvent,
+        'mouseup' => MouseEvent,
+        'mousemove' => MouseEvent,
+        'mouseenter' => MouseEvent,
+        'mouseleave' => MouseEvent,
+        'mouseover' => MouseEvent,
+        'mouseout' => MouseEvent,
+        'contextmenu' => MouseEvent,
+
+        # DragEvent
+        'drag' => DragEvent,
+        'dragstart' => DragEvent,
+        'dragend' => DragEvent,
+        'dragenter' => DragEvent,
+        'dragexit' => DragEvent,
+        'dragleave' => DragEvent,
+        'dragover' => DragEvent,
+        'drop' => DragEvent,
+
+        # KeyboardEvent
+        'keydown' => KeyboardEvent,
+        'keyup' => KeyboardEvent,
+        'keypress' => KeyboardEvent,
       }
 
       def self.create(event)
@@ -16,6 +40,10 @@ module Hyalite
 
       def target
         Node.create(`self.native.target`)
+      end
+
+      def prevent_default
+        `self.native.preventDefault()`
       end
     end
   end

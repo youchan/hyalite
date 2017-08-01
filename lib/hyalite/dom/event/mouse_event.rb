@@ -4,6 +4,7 @@ module Hyalite
       class MouseEvent
         include Native
         include Event
+        include MouseEventInterface
       end
     end
   end
