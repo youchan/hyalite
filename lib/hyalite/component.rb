@@ -31,6 +31,38 @@ module Hyalite
         end
 
         define_singleton_method(:initial_state) { @initial_state || {} }
+
+        define_singleton_method(:before_mount) do |&block|
+          if block
+            @before_mount = block
+          else
+            @before_mount
+          end
+        end
+
+        define_singleton_method(:after_mount) do |&block|
+          if block
+            @after_mount = block
+          else
+            @after_mount
+          end
+        end
+
+        define_singleton_method(:before_update) do |&block|
+          if block
+            @before_update = block
+          else
+            @before_update
+          end
+        end
+
+        define_singleton_method(:after_update) do |&block|
+          if block
+            @after_update = block
+          else
+            @after_update
+          end
+        end
       end
 
       TAGS.each do |tag|
@@ -77,22 +109,20 @@ module Hyalite
       {}
     end
 
-    def component_did_mount
-    end
-
     def component_will_mount
+      self.instance_eval(&self.class.before_mount) if self.class.before_mount
     end
 
     def component_did_mount
-    end
-
-    def component_will_unmount
+      self.instance_eval(&self.class.after_mount) if self.class.after_mount
     end
 
     def component_will_update(props, state, context)
+      self.instance_eval(&self.class.before_update) if self.class.before_update
     end
 
     def component_did_update(props, state, context)
+      self.instance_eval(&self.class.after_update) if self.class.after_update
     end
 
     def should_component_update(props, state, context)
