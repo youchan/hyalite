@@ -142,6 +142,19 @@ module Hyalite
         @updator.enqueue_callback(self, &block)
       end
     end
+    alias :update_state :set_state
+
+    def method_missing(method_name, **args, &block)
+      if @props.has_key?(method_name)
+        @props[method_name]
+      else
+        super
+      end
+    end
+
+    def respond_to?(method_name, include_private = false)
+      @props.has_key?(method_name) || super
+    end
 
     def render
     end
