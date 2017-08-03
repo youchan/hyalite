@@ -67,7 +67,7 @@ module Hyalite
 
       TAGS.each do |tag|
         define_method(tag) do |props, *children, &block|
-          children << ChildrenRenderer.new.instance_eval(&block) if block
+          children << ChildrenRenderer.new(self).instance_eval(&block) if block
           Hyalite.create_element(tag, props, *children)
         end
       end
@@ -76,7 +76,8 @@ module Hyalite
     end
 
     class ChildrenRenderer
-      def initialize
+      def initialize(component)
+        @component = component
         @children = []
         TAGS.each do |tag|
           define_singleton_method(tag) do |props, *children, &block|
@@ -84,6 +85,18 @@ module Hyalite
             @children
           end
         end
+      end
+
+      def method_missing(method_name, *args, &block)
+        if @component.respond_to?(method_name, true)
+          @component.send(method_name, *args, &block)
+        else
+          super
+        end
+      end
+
+      def respond_to_missing?(method_name, include_private = false)
+        @component.respond_to?(method_name, include_private) || super
       end
     end
 
@@ -144,7 +157,7 @@ module Hyalite
     end
     alias :update_state :set_state
 
-    def method_missing(method_name, **args, &block)
+    def method_missing(method_name, *args, &block)
       if @props.has_key?(method_name)
         @props[method_name]
       else
@@ -152,7 +165,7 @@ module Hyalite
       end
     end
 
-    def respond_to?(method_name, include_private = false)
+    def respond_to_missing?(method_name, include_private = false)
       @props.has_key?(method_name) || super
     end
 
