@@ -38,7 +38,40 @@ module Hyalite
                            children
                          end
 
-      ElementObject.new(type, key, ref, Hyalite.current_owner, props)
+      ElementObject.new(type, key, ref, Hyalite.current_owner, props).tap {|el| element_created(el) }
+    end
+
+    def element_created(element)
+      return unless @hooks
+      @hooks.each do |hook|
+        hook.call(element)
+      end
+    end
+
+    def create_element_hook(&block)
+      @hooks ||= []
+      hook_setter = HookSetter.new(@hooks)
+      yield hook_setter
+    ensure
+      hook_setter.destroy
+    end
+
+    class HookSetter
+      def initialize(hooks)
+        @hooks = hooks
+        @memo = []
+      end
+
+      def hook(&block)
+        @memo << block
+        @hooks << block
+      end
+
+      def destroy
+        @memo.each do |m|
+          @hooks.delete(m)
+        end
+      end
     end
 
     def fn(&block)

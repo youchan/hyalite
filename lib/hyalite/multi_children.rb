@@ -28,7 +28,6 @@ module Hyalite
         @rendered_children = next_children
         return if next_children.nil? && prev_children.nil?
 
-
         last_index = 0
         next_index = 0
         next_children.each do |name, next_child|

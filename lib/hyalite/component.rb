@@ -67,7 +67,13 @@ module Hyalite
 
       TAGS.each do |tag|
         define_method(tag) do |props, *children, &block|
-          children << ChildrenRenderer.new(self).instance_eval(&block) if block
+          if block
+            Hyalite.create_element_hook do |hook_setter|
+              renderer = ChildrenRenderer.new(self, hook_setter)
+              renderer.instance_eval(&block)
+              children << renderer.children
+            end
+          end
           Hyalite.create_element(tag, props, *children)
         end
       end
@@ -76,14 +82,13 @@ module Hyalite
     end
 
     class ChildrenRenderer
-      def initialize(component)
+      attr_reader :children
+
+      def initialize(component, hook_setter)
         @component = component
         @children = []
-        TAGS.each do |tag|
-          define_singleton_method(tag) do |props, *children, &block|
-            @children << Hyalite.create_element(tag, props, *children)
-            @children
-          end
+        hook_setter.hook do |el|
+          @children << el
         end
       end
 
@@ -101,7 +106,8 @@ module Hyalite
     end
 
     module ClassMethods
-      def el(props, *children)
+      def el(props, *children, &block)
+        children << ChildrenRenderer.new(self).instance_eval(&block) if block
         Hyalite.create_element(self, props, *children)
       end
     end
