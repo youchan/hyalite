@@ -1,3 +1,4 @@
+require 'opal'
 require 'hyalite/version'
 
 module Hyalite
