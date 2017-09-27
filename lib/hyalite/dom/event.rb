@@ -28,6 +28,12 @@ module Hyalite
         'keydown' => KeyboardEvent,
         'keyup' => KeyboardEvent,
         'keypress' => KeyboardEvent,
+
+        # TouchEvent
+        'touchstart' => TouchEvent,
+        'touchcancel' => TouchEvent,
+        'touchmove' => TouchEvent,
+        'touchend' => TouchEvent
       }
 
       def self.create(event)
