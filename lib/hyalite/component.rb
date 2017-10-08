@@ -161,11 +161,11 @@ module Hyalite
     end
 
     def component_will_update(props, state, context)
-      self.instance_eval(&self.class.before_update) if self.class.before_update
+      self.instance_exec(props, state, context, &self.class.before_update) if self.class.before_update
     end
 
     def component_did_update(props, state, context)
-      self.instance_eval(&self.class.after_update) if self.class.after_update
+      self.instance_exec(props, state, context, &self.class.after_update) if self.class.after_update
     end
 
     def should_component_update(props, state, context)
