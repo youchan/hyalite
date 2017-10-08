@@ -146,7 +146,7 @@ module Hyalite
     end
 
     def find_dom_node(component_or_element)
-      return component_or_element if component_or_element.respond_to?(:node_type) && component_or_element.element?
+      return component_or_element if component_or_element.is_a?(DOM::Node) && component_or_element.element?
 
       if instance_map.has_key?(component_or_element)
         return Mount.node(instance_map[component_or_element].root_node_id)
