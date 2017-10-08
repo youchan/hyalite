@@ -8,6 +8,8 @@ module Hyalite::DOM
     alias_native :remove_attribute, :removeAttribute
     alias_native :tag_name, :tagName
 
+    native_accessor :value
+
     def element?
       true
     end
@@ -39,10 +41,6 @@ module Hyalite::DOM
 
     def text=(text)
       `self.native.textContent = text`
-    end
-
-    def value
-      `self.native.value`
     end
 
     def style(hash)
