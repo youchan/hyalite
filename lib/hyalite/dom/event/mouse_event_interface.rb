@@ -68,7 +68,7 @@ module Hyalite
         end
 
         def related_target
-          `#@native.relatedTarget`
+          Node.create(`#@native.relatedTarget`)
         end
 
         def modifire_state

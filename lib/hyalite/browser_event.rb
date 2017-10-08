@@ -27,6 +27,8 @@ module Hyalite
       topDragStart: 'dragstart',
       topDrop: 'drop',
       topFocus: 'focus',
+      topFocusIn: 'focusin',
+      topFocusOut: 'focusout',
       topInput: 'input',
       topKeyDown: 'keydown',
       topKeyPress: 'keypress',

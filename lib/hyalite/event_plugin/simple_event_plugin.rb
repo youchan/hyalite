@@ -91,6 +91,18 @@ module Hyalite
           captured: :onFocusCapture
         }
       },
+      focusin: {
+        phasedRegistrationNames: {
+          bubbled: :onFocusIn,
+          captured: :onFocusInCapture
+        }
+      },
+      focusout: {
+        phasedRegistrationNames: {
+          bubbled: :onFocusOut,
+          captured: :onFocusOutCapture
+        }
+      },
       input: {
         phasedRegistrationNames: {
           bubbled: :onInput,
@@ -230,6 +242,8 @@ module Hyalite
       topDrop: EVENT_TYPES[:drop],
       topError: EVENT_TYPES[:error],
       topFocus: EVENT_TYPES[:focus],
+      topFocusIn: EVENT_TYPES[:focusin],
+      topFocusOut: EVENT_TYPES[:focusout],
       topInput: EVENT_TYPES[:input],
       topKeyDown: EVENT_TYPES[:keyDown],
       topKeyPress: EVENT_TYPES[:keyPress],
