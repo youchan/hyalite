@@ -52,7 +52,7 @@ module Hyalite
         checked = props[:checked]
         node = Mount.node(@dom_component.root_node_id)
         if checked
-          node[:checked] = checked
+          node.attributes[:checked] = checked
         else
           node.remove_attribute(:checked)
         end
