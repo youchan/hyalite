@@ -48,6 +48,22 @@ module Hyalite
           end
         end
 
+        define_singleton_method(:before_unmount) do |&block|
+          if block
+            @before_unmount = block
+          else
+            @before_unmount
+          end
+        end
+
+        define_singleton_method(:after_unmount) do |&block|
+          if block
+            @after_unmount = block
+          else
+            @after_unmount
+          end
+        end
+
         define_singleton_method(:before_update) do |&block|
           if block
             @before_update = block
@@ -134,6 +150,14 @@ module Hyalite
 
     def component_did_mount
       self.instance_eval(&self.class.after_mount) if self.class.after_mount
+    end
+
+    def component_will_unmount
+      self.instance_eval(&self.class.before_unmount) if self.class.before_unmount
+    end
+
+    def component_did_unmount
+      self.instance_eval(&self.class.after_unmount) if self.class.after_unmount
     end
 
     def component_will_update(props, state, context)
