@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hyalite (0.2.3)
+    hyalite (0.2.4)
       opal
 
 GEM
