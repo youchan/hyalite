@@ -41,6 +41,8 @@ module Hyalite
         event_class = EVENT_CLASSES[type]
         if event_class
           event_class.new(event)
+        else
+          DefaultEvent.new(event)
         end
       end
 
@@ -50,6 +52,11 @@ module Hyalite
 
       def prevent_default
         `self.native.preventDefault()`
+      end
+
+      class DefaultEvent
+        include Native
+        include Event
       end
     end
   end
