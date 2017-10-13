@@ -43,6 +43,22 @@ module Hyalite::DOM
       `self.native.textContent = text`
     end
 
+    def width
+      `#@native.clientWidth`
+    end
+
+    def height
+      `#@native.clientHeight`
+    end
+
+    def top
+      `#@native.clientTop`
+    end
+
+    def left
+      `#@native.clientLeft`
+    end
+
     def style(hash)
       hash.each do |key, value|
         `self.native.style[key] = value`

@@ -11,11 +11,14 @@ require_relative 'dom/event/mouse_event'
 require_relative 'dom/event/drag_event'
 require_relative 'dom/event/touch_event'
 require_relative 'dom/event'
+require_relative 'dom/event_target'
 require_relative 'dom/node'
 require_relative 'dom/collection'
 require_relative 'dom/text'
 require_relative 'dom/element'
 require_relative 'dom/body'
 require_relative 'dom/document'
+require_relative 'dom/window'
 
 $document = Hyalite::DOM::Document.singleton
+$window = Hyalite::DOM::Window.singleton

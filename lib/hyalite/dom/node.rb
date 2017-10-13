@@ -1,5 +1,6 @@
 module Hyalite::DOM
   module Node
+    include EventTarget
 
     def self.create(node)
       @classes ||= [nil, Element, nil, Text, nil, nil, nil, nil, nil, Document, nil, nil]
@@ -57,11 +58,6 @@ module Hyalite::DOM
     def next_sibling
       sib = `self.native.nextSibling`
       Node.create(sib) if sib
-    end
-
-    def on(name, &block)
-      callback = Proc.new{|event| block.call(Event.create(event))}
-      `self.native.addEventListener(name, callback)`
     end
 
     def ==(other)
