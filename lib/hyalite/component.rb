@@ -87,9 +87,10 @@ module Hyalite
             Hyalite.create_element_hook do |hook_setter|
               renderer = ChildrenRenderer.new(self, hook_setter)
               renderer.instance_eval(&block)
-              children << renderer.children
+              children += renderer.children.select{|el| el.is_a?(ElementObject) && el.parent.nil? }
             end
           end
+
           Hyalite.create_element(tag, props, *children)
         end
       end

@@ -18,7 +18,12 @@ module Hyalite
 
       props = {}
 
-      if config
+      case config
+      when String
+        children = [config]
+      when Array
+        children = config
+      when Hash
         key = config[:key]
         ref = config[:ref]
 
@@ -38,7 +43,10 @@ module Hyalite
                            children
                          end
 
-      ElementObject.new(type, key, ref, Hyalite.current_owner, props).tap {|el| element_created(el) }
+      ElementObject.new(type, key, ref, Hyalite.current_owner, props).tap do |el|
+        children.each {|child| child.parent = el if child.is_a?(ElementObject) }
+        element_created(el)
+      end
     end
 
     def element_created(element)
@@ -48,7 +56,7 @@ module Hyalite
       end
     end
 
-    def create_element_hook(&block)
+    def create_element_hook(key, &block)
       @hooks ||= []
       hook_setter = HookSetter.new(@hooks)
       yield hook_setter
