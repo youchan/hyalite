@@ -132,7 +132,7 @@ module Hyalite
       when DOM::Node
         Mount.render_subtree_into_container(next_element, container, &block)
       when Enumerable
-        container.each {|node| render(next_element, node, &block) }
+        container.map {|node| render(next_element, node, &block) }
       end
     end
 
