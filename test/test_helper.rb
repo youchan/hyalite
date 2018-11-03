@@ -1,23 +1,26 @@
 require 'hyalite'
 require 'native'
+require "opal/test-unit"
 
 module RenderingHelper
+  attr_accessor :mount_at
+
   def self.included(mod)
-    mod.before do
+    mod.setup do
       $document.body.clear
-      @mount_at = Hyalite::DOM::Element.create('div').add_class('root')
-      $document.body << @mount_at
+      mount_at = Hyalite::DOM::Element.create('div').add_class('root')
+      $document.body << mount_at
     end
   end
 
   def render(&block)
-    class TestComponent
+    test_component = Class.new do
       include Hyalite::Component
-
       define_method :render, &block
     end
 
-    Hyalite.render(Hyalite.create_element(TestComponent), @mount_at)
+    mount_at = $document['.root']
+    Hyalite.render(Hyalite.create_element(test_component), mount_at)
   end
 
   def trace_element(element, depth = 0)

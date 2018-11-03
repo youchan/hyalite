@@ -2,5 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rake'
-gem 'opal-rspec'
+group :test do
+  gem 'rake'
+  gem 'opal-test-unit'
+end
