@@ -12,7 +12,6 @@ Example
 
 ```ruby
 require 'hyalite'
-require 'browser/interval'
 
 class ExampleView
   include Hyalite::Component
@@ -20,9 +19,11 @@ class ExampleView
   state :count, 0
 
   def component_did_mount
-    every(5) do
+    interval = Proc.new do
       @state.count += 1
     end
+
+    `setInterval(interval, 5000)`
   end
 
   def render

@@ -1,9 +1,9 @@
 require 'bundler'
 Bundler.require
 
-run Opal::Server.new { |s|
+run Opal::Sprockets::Server.new { |s|
   s.append_path 'app'
-  s.append_path '../client'
+  s.append_path '../lib'
 
   s.debug = true
   s.main = 'application'
