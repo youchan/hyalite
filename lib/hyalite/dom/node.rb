@@ -2,6 +2,8 @@ module Hyalite::DOM
   module Node
     include EventTarget
 
+    attr_reader :native
+
     def self.create(node)
       @classes ||= [nil, Element, nil, Text, nil, nil, nil, nil, nil, Document, nil, nil]
 
