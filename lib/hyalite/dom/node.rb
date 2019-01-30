@@ -26,6 +26,10 @@ module Hyalite::DOM
       false
     end
 
+    def attr(name)
+      `self.native[name]`
+    end
+
     def node_name
       `self.native.tagName`
     end
