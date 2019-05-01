@@ -74,6 +74,40 @@ module Hyalite
         component_instance
       end
 
+      def unmount_component_at_node(container)
+        root_id = root_id(container)
+        component = @instances_by_root_id[root_id]
+        unless component
+          container_has_non_root_child = has_non_root_child(container)
+
+          container_id = internal_id(container)
+          container_id &&
+          container_id == InstanceHandles.root_id_from_node_id(container_id)
+          return false
+        end
+
+        Hyalite.updates.batched_updates do
+          unmount_component_from_node(component, container)
+        end
+
+        @instances_by_root_id.delete(root_id)
+        @containers_by_root_id.delete(root_id)
+        true
+      end
+
+      def has_non_root_child(node)
+        root_id = root_id(container)
+        root_id ? root_id != InstanceHandles.root_id_from_node_id(root_id) : false
+      end
+
+      def unmount_component_from_node(instance, container)
+        Reconciler.unmount_component(instance)
+
+        while container.children.length > 0
+          container.children.last.remove
+        end
+      end
+
       def register_component(next_component, container)
         #ReactBrowserEventEmitter.ensureScrollValueMonitoring();
 
@@ -122,7 +156,7 @@ module Hyalite
 
       def root_element_in_container(container)
         if container.document?
-          $document
+          container
         else
           container.children.first
         end
