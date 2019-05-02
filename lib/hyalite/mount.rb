@@ -60,7 +60,7 @@ module Hyalite
         return false unless node.element?
 
         id = node_id(node)
-        id ? id[0] == SEPARATOR : false
+        id ? id[0] == Hyalite::Reconciler::SEPARATOR : false
       end
 
       def render_new_root_component(next_element, container, should_reuse_markup)
