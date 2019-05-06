@@ -17,11 +17,11 @@ module Hyalite
             return
           end
 
-          element.attributes[attribute_name]=Hyalite.escape_text_content_for_browser(value)
+          element.attributes[attribute_name] = Hyalite.escape_text_content_for_browser(value.to_s)
         elsif DOMProperty.is_custom_attribute(name)
           return if value.nil?
 
-          element.attributes[name]=Hyalite.escape_text_content_for_browser(value)
+          element.attributes[name] = Hyalite.escape_text_content_for_browser(value.to_s)
         end
       end
 
@@ -32,7 +32,7 @@ module Hyalite
       def create_markup_for_custom_attribute(element, name, value)
         return if (!is_attribute_name_safe(name) || value == null)
 
-        element.attributes[name]=Hyalite.escape_text_content_for_browser(value)
+        element.attributes[name] = Hyalite.escape_text_content_for_browser(value.to_s)
       end
 
       def is_attribute_name_safe(attribute_name)

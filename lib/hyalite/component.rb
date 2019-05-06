@@ -109,6 +109,12 @@ module Hyalite
         end
       end
 
+      TAGS.each do |tag|
+        define_method(tag) do |props, *children, &block|
+          @component.send(tag, props, *children, &block)
+        end
+      end
+
       def method_missing(method_name, *args, &block)
         if @component.respond_to?(method_name, true)
           @component.send(method_name, *args, &block)
