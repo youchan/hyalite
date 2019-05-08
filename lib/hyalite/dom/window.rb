@@ -9,6 +9,10 @@ module Hyalite::DOM
       Native(`#@native.location`)
     end
 
+    def location=(loc)
+      Native(`#@native.location=loc`)
+    end
+
     def width
       `#@native.innerWidth`
     end
