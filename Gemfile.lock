@@ -2,24 +2,20 @@ PATH
   remote: .
   specs:
     hyalite (0.2.7)
-      opal
+      opal (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.0)
-    hike (1.2.3)
-    opal (0.11.3)
+    opal (1.0.3)
       ast (>= 2.3.0)
-      hike (~> 1.2)
-      parser (= 2.3.3.1)
-      sourcemap (~> 0.1.0)
+      parser (~> 2.6)
     opal-test-unit (0.1.2)
       opal
-    parser (2.3.3.1)
-      ast (~> 2.2)
-    rake (12.3.1)
-    sourcemap (0.1.1)
+    parser (2.7.0.3)
+      ast (~> 2.4.0)
+    rake (13.0.1)
 
 PLATFORMS
   ruby
