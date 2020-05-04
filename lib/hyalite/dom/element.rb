@@ -15,20 +15,20 @@ module Hyalite::DOM
     end
 
     def input_type
-      `self.native.type`
+      `#@native.type`
     end
 
     def [](prop_name)
-      `self.native[#{prop_name}]`
+      `#@native[#{prop_name}]`
     end
 
     def add_class(name)
-      `self.native.classList.add(name)`
+      `#@native.classList.add(name)`
       self
     end
 
     def class_names
-      Array.new(`self.native.classList`).to_a
+      Array.new(`#@native.classList`).to_a
     end
 
     def attributes
@@ -36,11 +36,11 @@ module Hyalite::DOM
     end
 
     def text
-      `self.native.textContent`
+      `#@native.textContent`
     end
 
     def text=(text)
-      `self.native.textContent = text`
+      `#@native.textContent = text`
     end
 
     def width
@@ -61,20 +61,20 @@ module Hyalite::DOM
 
     def style(hash)
       hash.each do |key, value|
-        `self.native.style[key] = value`
+        `#@native.style[key] = value`
       end
     end
 
     def add_child(child)
-      `self.native.appendChild(child.native)`
+      `#@native.appendChild(child.native)`
     end
 
     def inner_html
-      `self.native.innerHTML`
+      `#@native.innerHTML`
     end
 
     def inner_html=(html)
-      `self.native.innerHTML = html`
+      `#@native.innerHTML = html`
     end
 
     def inner_dom=(dom)
@@ -87,7 +87,7 @@ module Hyalite::DOM
     end
 
     def to_s
-      "<#{`self.native.tagName`} class='#{self.class_names.join(' ')}' id='#{self['id']}'/>"
+      "<#{`#@native.tagName`} class='#{self.class_names.join(' ')}' id='#{self['id']}' />"
     end
 
     def self.create(tag)

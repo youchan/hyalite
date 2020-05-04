@@ -27,47 +27,51 @@ module Hyalite::DOM
     end
 
     def attr(name)
-      `self.native[name]`
+      `#@native[name] || #{nil}`
+    end
+
+    def data(name)
+      `#@native.dataset[#{name}] || #{nil}`
     end
 
     def node_name
-      `self.native.tagName`
+      `#@native.tagName`
     end
 
     def <<(child)
-      `self.native.appendChild(child.native)`
+      `#@native.appendChild(child.native)`
     end
 
     def clear
       %x(
-        var len = self.native.childNodes.length;
+        var len = #@native.childNodes.length;
         for (var i = 0; i < len; i++) {
-          self.native.childNodes[0].remove();
+          #@native.childNodes[0].remove();
         }
       )
     end
 
     def parent
-      if parent = `self.native.parentNode`
+      if parent = `#@native.parentNode`
         Node.create(parent)
       end
     end
 
     def children
-      Collection.new `self.native.childNodes`
+      Collection.new `#@native.childNodes`
     end
 
     def remove
-      `self.native.remove()`
+      `#@native.remove()`
     end
 
     def next_sibling
-      sib = `self.native.nextSibling`
+      sib = `#@native.nextSibling`
       Node.create(sib) if sib
     end
 
     def ==(other)
-      `self.native === other.native`
+      `#@native === other.native`
     end
   end
 end
