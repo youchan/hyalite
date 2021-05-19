@@ -59,6 +59,10 @@ module Hyalite::DOM
       `#@native.clientLeft`
     end
 
+    def client_rect
+      Native(`#@native.getBoundingClientRect()`)
+    end
+
     def style(hash)
       hash.each do |key, value|
         `#@native.style[key] = value`
