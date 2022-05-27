@@ -22,7 +22,7 @@ GEM
       tilt (>= 1.4)
     parser (2.3.3.1)
       ast (~> 2.2)
-    rack (2.2.3)
+    rack (2.2.3.1)
     sourcemap (0.1.1)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
